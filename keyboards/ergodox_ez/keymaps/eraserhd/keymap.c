@@ -21,7 +21,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |   =    |   1  |   2  |   3  |   4  |   5  | LEFT |           | Sleep|   6  |   7  |   8  |   9  |   0  |   -    |
+ * |   =    |   1  |   2  |   3  |   4  |   5  | LEFT |           |      |   6  |   7  |   8  |   9  |   0  |   -    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * | SYMB   |   Q  |   W  |   E  |   R  |   T  | Meh  |           | Meh  |   Y  |   U  |   I  |   O  |   P  |   \    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -34,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                        ,-------------.       ,-------------.
  *                                        | App  | LGui |       | Alt  |  Esc |
  *                                 ,------|------|------|       |------+------+------.
- *                                 |      |      | MNAV |       | PgUp |      |      |
+ *                                 |      |      | Sleep|       | PgUp |      |      |
  *                                 | Enter| Tab/ |------|       |------| Bksp |Space |
  *                                 |      | Cmd  | KNAV |       | PgDn | /Cmd |      |
  *                                 `--------------------'       `--------------------'
@@ -49,10 +49,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LSFT,     CTL_T(KC_Z),  KC_X,   KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
         KC_GRV,      KC_QUOT,      LALT(KC_LSFT),  KC_LEFT, KC_LALT,
                                               ALT_T(KC_APP),  KC_LGUI,
-                                                              MO(MNAV),
+                                                              KC_SLEEP,
                                         KC_ENT,LGUI_T(KC_TAB),MO(KNAV),
         // right hand
-             KC_SLEEP,    KC_6,   KC_7,  KC_8,   KC_9,   KC_0,           KC_MINS,
+             KC_NO,       KC_6,   KC_7,  KC_8,   KC_9,   KC_0,           KC_MINS,
              MEH_T(KC_NO),KC_Y,   KC_U,  KC_I,   KC_O,   KC_P,           KC_BSLS,
                           KC_H,   KC_J,  KC_K,   KC_L,   KC_SCLN, 	 LT(SYMB,KC_QUOT),
              ALL_T(KC_NO),KC_N,   KC_M,  KC_COMM,KC_DOT, CTL_T(KC_SLSH), KC_RSFT,
