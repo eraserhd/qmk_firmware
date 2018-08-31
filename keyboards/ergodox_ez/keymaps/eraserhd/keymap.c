@@ -15,7 +15,9 @@ LEADER_EXTERNS();
 enum custom_keycodes {
   PLACEHOLDER = SAFE_RANGE, // can always be here
   RGB_SLD,
-  META
+  META,
+  X_META,
+  DOT_META
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -28,7 +30,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * | CAPSL  |A/LAlt|   S  |D/MNAV|F/KNAV|   G  |------|           |------|   H  |   J  |   K  |   L  |;/RAlt|' / SYMB|
  * |--------+------+------+------+------+------| Hyper|           |Hyper |------+------+------+------+------+--------|
- * | LShift |Z/Ctrl|   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |//Ctrl| RShift |
+ * | LShift |Z/Ctrl|X/Meta|   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |./Meta|//Ctrl| RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
  *   | `    |  '"  |AltShf| Left | Meta |                                       | Meta | Down |   [  |   ]  |Leader|
  *   `----------------------------------'                                       `----------------------------------'
@@ -47,7 +49,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_EQL,      KC_1,         KC_2,   KC_3,   KC_4,   KC_5,   KC_LEFT,
         MO(SYMB),    KC_Q,         KC_W,   KC_E,   KC_R,   KC_T,   MEH_T(KC_NO),
         KC_CAPSLOCK, LALT_T(KC_A), KC_S,   LT(MNAV,KC_D),   LT(KNAV,KC_F),   KC_G,
-        KC_LSFT,     CTL_T(KC_Z),  KC_X,   KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
+        KC_LSFT,     CTL_T(KC_Z),  X_META, KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
         KC_GRV,      KC_QUOT,      LALT(KC_LSFT),  KC_LEFT, META,
                                               ALT_T(KC_APP),  KC_LGUI,
                                                               KC_SLEEP,
@@ -56,7 +58,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
              KC_NO,       KC_6,   KC_7,  KC_8,   KC_9,   KC_0,           KC_MINS,
              MEH_T(KC_NO),KC_Y,   KC_U,  KC_I,   KC_O,   KC_P,           KC_BSLS,
                           KC_H,   KC_J,  KC_K,   KC_L,   RALT_T(KC_SCLN),LT(SYMB,KC_QUOT),
-             ALL_T(KC_NO),KC_N,   KC_M,  KC_COMM,KC_DOT, CTL_T(KC_SLSH), KC_RSFT,
+             ALL_T(KC_NO),KC_N,   KC_M,  KC_COMM,DOT_META,CTL_T(KC_SLSH), KC_RSFT,
                                   META,  KC_DOWN,KC_LBRC,KC_RBRC,        KC_LEAD,
              KC_LALT,        KC_ESC,
              KC_PGUP,
@@ -212,6 +214,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 };
 
 static bool meta_is_held = false;
+static bool meta_sent = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -224,6 +227,30 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
     case META:
       meta_is_held = record->event.pressed;
+      return false;
+    case X_META:
+      if (record->event.pressed) {
+          meta_is_held = true;
+          meta_sent = false;
+      } else {
+          meta_is_held = false;
+          if (!meta_sent) {
+              register_code(KC_X);
+              unregister_code(KC_X);
+          }
+      }
+      return false;
+    case DOT_META:
+      if (record->event.pressed) {
+          meta_is_held = true;
+          meta_sent = false;
+      } else {
+          meta_is_held = false;
+          if (!meta_sent) {
+              register_code(KC_DOT);
+              unregister_code(KC_DOT);
+          }
+      }
       return false;
     default:
       if (record->event.pressed && meta_is_held) {
@@ -246,6 +273,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case KC_TRNS:
           break;
         default:
+          meta_sent = true;
           SEND_STRING ("\x1b");
         }
       }
