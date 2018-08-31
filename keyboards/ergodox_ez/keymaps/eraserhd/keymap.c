@@ -213,7 +213,8 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
   return MACRO_NONE;
 };
 
-static bool meta_is_held = false;
+static bool x_meta_is_held = false;
+static bool dot_meta_is_held = false;
 static bool meta_sent = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -225,16 +226,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         #endif
       }
       return false;
-    case META:
-      meta_is_held = record->event.pressed;
-      return false;
     case X_META:
       if (record->event.pressed) {
-          meta_is_held = true;
+          x_meta_is_held = true;
           meta_sent = false;
       } else {
-          meta_is_held = false;
+          x_meta_is_held = false;
           if (!meta_sent) {
+              if (dot_meta_is_held) {
+                  meta_sent = true;
+                  SEND_STRING("\x1b");
+              }
               register_code(KC_X);
               unregister_code(KC_X);
           }
@@ -242,18 +244,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
     case DOT_META:
       if (record->event.pressed) {
-          meta_is_held = true;
+          dot_meta_is_held = true;
           meta_sent = false;
       } else {
-          meta_is_held = false;
+          dot_meta_is_held = false;
           if (!meta_sent) {
+              if (x_meta_is_held) {
+                  meta_sent = true;
+                  SEND_STRING ("\x1b");
+              }
               register_code(KC_DOT);
               unregister_code(KC_DOT);
           }
       }
       return false;
     default:
-      if (record->event.pressed && meta_is_held) {
+      if (record->event.pressed && (x_meta_is_held || dot_meta_is_held)) {
         switch (keycode) {
         case KC_CAPSLOCK:
         case KC_SCROLLLOCK:
