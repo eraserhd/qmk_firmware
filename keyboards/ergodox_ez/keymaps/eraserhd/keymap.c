@@ -28,11 +28,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * | SYMB   |   Q  |   W  |   E  |   R  |   T  | Meh  |           | Meh  |   Y  |   U  |   I  |   O  |   P  |   \    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * | CAPSL  |A/LAlt|   S  |D/MNAV|F/KNAV|   G  |------|           |------|   H  |   J  |   K  |   L  |;/RAlt|' / SYMB|
+ * | CAPSL  |   A  |   S  |D/MNAV|F/KNAV|   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |' / SYMB|
  * |--------+------+------+------+------+------| Hyper|           |Hyper |------+------+------+------+------+--------|
  * | LShift |Z/Ctrl|X/Meta|   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |./Meta|//Ctrl| RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | `    |  '"  |AltShf| Left | Meta |                                       | Meta | Down |   [  |   ]  |Leader|
+ *   | LAlt |  '"  |AltShf| Left | Meta |                                       |Leader| Down |   [  |   ]  | RAlt |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        | App  | LGui |       | Alt  |  Esc |
@@ -48,18 +48,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         // left hand
         KC_EQL,      KC_1,         KC_2,   KC_3,   KC_4,   KC_5,   KC_LEFT,
         MO(SYMB),    KC_Q,         KC_W,   KC_E,   KC_R,   KC_T,   MEH_T(KC_NO),
-        KC_CAPSLOCK, LALT_T(KC_A), KC_S,   LT(MNAV,KC_D),   LT(KNAV,KC_F),   KC_G,
+        KC_CAPSLOCK, KC_A,         KC_S,   LT(MNAV,KC_D),   LT(KNAV,KC_F),   KC_G,
         KC_LSFT,     CTL_T(KC_Z),  X_META, KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
-        KC_GRV,      KC_QUOT,      LALT(KC_LSFT),  KC_LEFT, META,
+        KC_LALT,     KC_QUOT,      LALT(KC_LSFT),  KC_LEFT, META,
                                               ALT_T(KC_APP),  KC_LGUI,
                                                               KC_SLEEP,
                                         KC_ENT,LGUI_T(KC_TAB),MO(KNAV),
         // right hand
-             KC_NO,       KC_6,   KC_7,  KC_8,   KC_9,   KC_0,           KC_MINS,
-             MEH_T(KC_NO),KC_Y,   KC_U,  KC_I,   KC_O,   KC_P,           KC_BSLS,
-                          KC_H,   KC_J,  KC_K,   KC_L,   RALT_T(KC_SCLN),LT(SYMB,KC_QUOT),
-             ALL_T(KC_NO),KC_N,   KC_M,  KC_COMM,DOT_META,CTL_T(KC_SLSH), KC_RSFT,
-                                  META,  KC_DOWN,KC_LBRC,KC_RBRC,        KC_LEAD,
+             KC_NO,       KC_6,  KC_7,   KC_8,   KC_9,   KC_0,           KC_MINS,
+             MEH_T(KC_NO),KC_Y,  KC_U,   KC_I,   KC_O,   KC_P,           KC_BSLS,
+                          KC_H,  KC_J,   KC_K,   KC_L,   KC_SCLN,        LT(SYMB,KC_QUOT),
+             ALL_T(KC_NO),KC_N,  KC_M,   KC_COMM,DOT_META,CTL_T(KC_SLSH),KC_RSFT,
+                                 KC_LEAD,KC_DOWN,KC_LBRC,KC_RBRC,        KC_RALT,
              KC_LALT,        KC_ESC,
              KC_PGUP,
              KC_PGDN, LGUI_T(KC_BSPC), KC_SPC
