@@ -69,16 +69,31 @@ int x_meta_can_be_used_as_x[] = {
     PRESS, KC_X, RELEASE, KC_X, END
 };
 int x_meta_can_be_used_as_meta[] = {
-    PRESS, X_META, PRESS, KC_Q, RELEASE, KC_Q, RELEASE, X_META, END,
+    PRESS, X_META, PRESS, KC_I, RELEASE, KC_I, RELEASE, X_META, END,
+    PRESS, KC_ESC, RELEASE, KC_ESC, PRESS, KC_I, RELEASE, KC_I, END
+};
+int dot_meta_can_be_used_as_dot[] = {
+    PRESS, DOT_META, RELEASE, DOT_META, END,
+    PRESS, KC_DOT, RELEASE, KC_DOT, END
+};
+int dot_meta_can_be_used_as_meta[] = {
+    PRESS, DOT_META, PRESS, KC_Q, RELEASE, KC_Q, RELEASE, DOT_META, END,
     PRESS, KC_ESC, RELEASE, KC_ESC, PRESS, KC_Q, RELEASE, KC_Q, END
 };
 int can_type_meta_dot[] = {
     PRESS, X_META, PRESS, DOT_META, RELEASE, DOT_META, RELEASE, X_META, END,
     PRESS, KC_ESC, RELEASE, KC_ESC, PRESS, KC_DOT, RELEASE, KC_DOT, END
 };
+int can_type_meta_x[] = {
+    PRESS, DOT_META, PRESS, X_META, RELEASE, X_META, RELEASE, DOT_META, END,
+    PRESS, KC_ESC, RELEASE, KC_ESC, PRESS, KC_X, RELEASE, KC_X, END
+};
 
 int main(void) {
     assert(check(x_meta_can_be_used_as_x));
     assert(check(x_meta_can_be_used_as_meta));
+    assert(check(dot_meta_can_be_used_as_dot));
+    assert(check(dot_meta_can_be_used_as_meta));
     assert(check(can_type_meta_dot));
+    assert(check(can_type_meta_x));
 }
