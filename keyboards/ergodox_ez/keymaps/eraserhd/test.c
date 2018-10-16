@@ -92,6 +92,10 @@ int x_meta_can_be_typed_fastly_as_x[] = {
     PRESS, X_META, PRESS, KC_I, RELEASE, X_META, RELEASE, KC_I, END,
     PRESS, KC_X, RELEASE, KC_X, PRESS, KC_I, RELEASE, KC_I, END
 };
+int dot_meta_can_be_typed_fastly_as_dot[] = {
+    PRESS, DOT_META, PRESS, KC_Q, RELEASE, DOT_META, RELEASE, KC_Q, END,
+    PRESS, KC_DOT, RELEASE, KC_DOT, PRESS, KC_Q, RELEASE, KC_Q, END
+};
 
 int main(void) {
     assert(check(x_meta_can_be_used_as_x));
@@ -101,4 +105,5 @@ int main(void) {
     assert(check(can_type_meta_dot));
     assert(check(can_type_meta_x));
     assert(check(x_meta_can_be_typed_fastly_as_x));
+    assert(check(dot_meta_can_be_typed_fastly_as_dot));
 }

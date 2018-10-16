@@ -40,6 +40,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
           meta_state.dot_held = true;
           meta_state.sent = false;
+          meta_state.pressed = KC_NO;
       } else {
           meta_state.dot_held = false;
           if (!meta_state.sent) {
@@ -50,6 +51,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
               }
               register_code(KC_DOT);
               unregister_code(KC_DOT);
+              if (meta_state.pressed != KC_NO) {
+                  register_code(meta_state.pressed);
+              }
           }
       }
       return false;
