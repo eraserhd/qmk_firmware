@@ -261,7 +261,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
     default:
-      if (record->event.pressed && (meta_state.x_held || meta_state.dot_held)) {
+      if (meta_state.x_held || meta_state.dot_held) {
         switch (keycode) {
         case KC_CAPSLOCK:
         case KC_SCROLLLOCK:
@@ -281,8 +281,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case KC_TRNS:
           break;
         default:
-          meta_state.sent = true;
-          SEND_STRING ("\x1b");
+          if (record->event.pressed) {
+            return false;
+          } else {
+            meta_state.sent = true;
+            SEND_STRING ("\x1b");
+            register_code(keycode);
+          }
         }
       }
       return true;
