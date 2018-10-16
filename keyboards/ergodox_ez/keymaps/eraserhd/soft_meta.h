@@ -1,5 +1,6 @@
 
 static struct {
+    uint16_t pressed;
     bool x_held : 1;
     bool dot_held : 1;
     bool sent : 1;
@@ -18,6 +19,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
           meta_state.x_held = true;
           meta_state.sent = false;
+          meta_state.pressed = KC_NO;
       } else {
           meta_state.x_held = false;
           if (!meta_state.sent) {
@@ -28,6 +30,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
               }
               register_code(KC_X);
               unregister_code(KC_X);
+              if (meta_state.pressed != KC_NO) {
+                  register_code(meta_state.pressed);
+              }
           }
       }
       return false;
@@ -70,12 +75,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           break;
         default:
           if (record->event.pressed) {
-            return false;
+              meta_state.pressed = keycode;
+              return false;
           } else {
-            meta_state.sent = true;
-            register_code(KC_ESC);
-            unregister_code(KC_ESC);
-            register_code(keycode);
+              meta_state.pressed = KC_NO;
+              meta_state.sent = true;
+              register_code(KC_ESC);
+              unregister_code(KC_ESC);
+              register_code(keycode);
           }
         }
       }
