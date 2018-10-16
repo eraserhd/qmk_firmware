@@ -5,7 +5,7 @@
 
 LEADER_EXTERNS();
 
-#include "keymap.h"
+#include "eraserhd.h"
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer

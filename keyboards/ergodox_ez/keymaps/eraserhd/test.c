@@ -6,7 +6,7 @@
 #include "../../../../tmk_core/common/keycode.h"
 #include "../../../../tmk_core/common/action.h"
 #include "../../../../quantum/quantum_keycodes.h"
-#include "keymap.h"
+#include "eraserhd.h"
 
 #include "soft_meta.h"
 
