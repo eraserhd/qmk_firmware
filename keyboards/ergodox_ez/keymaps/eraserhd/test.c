@@ -72,8 +72,13 @@ int x_meta_can_be_used_as_meta[] = {
     PRESS, X_META, PRESS, KC_Q, RELEASE, KC_Q, RELEASE, X_META, END,
     PRESS, KC_ESC, RELEASE, KC_ESC, PRESS, KC_Q, RELEASE, KC_Q, END
 };
+int can_type_meta_dot[] = {
+    PRESS, X_META, PRESS, DOT_META, RELEASE, DOT_META, RELEASE, X_META, END,
+    PRESS, KC_ESC, RELEASE, KC_ESC, PRESS, KC_DOT, RELEASE, KC_DOT, END
+};
 
 int main(void) {
     assert(check(x_meta_can_be_used_as_x));
     assert(check(x_meta_can_be_used_as_meta));
+    assert(check(can_type_meta_dot));
 }
