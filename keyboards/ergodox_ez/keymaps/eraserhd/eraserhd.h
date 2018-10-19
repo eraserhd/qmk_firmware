@@ -10,7 +10,6 @@
 enum custom_keycodes {
   PLACEHOLDER = SAFE_RANGE, // can always be here
   RGB_SLD,
-  META,
   X_META,
   DOT_META
 };

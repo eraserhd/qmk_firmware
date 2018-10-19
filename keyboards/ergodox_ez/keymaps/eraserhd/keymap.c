@@ -19,7 +19,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------| Hyper|           |Hyper |------+------+------+------+------+--------|
  * | LShift |Z/Ctrl|X/Meta|   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |./Meta|//Ctrl| RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | LAlt |  '"  |AltShf| Left | Meta |                                       |Leader| Down |   [  |   ]  | RAlt |
+ *   | LAlt |  '"  |AltShf| Left |      |                                       |Leader| Down |   [  |   ]  | RAlt |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        | App  | LGui |       | Alt  |  Esc |
@@ -37,7 +37,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         MO(SYMB),    KC_Q,         KC_W,   KC_E,   KC_R,   KC_T,   MEH_T(KC_NO),
         KC_CAPSLOCK, KC_A,         KC_S,   LT(MNAV,KC_D),  LT(SYMB,KC_F),   KC_G,
         KC_LSFT,     CTL_T(KC_Z),  X_META, KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
-        KC_LALT,     KC_QUOT,      LALT(KC_LSFT),  KC_LEFT, META,
+        KC_LALT,     KC_QUOT,      LALT(KC_LSFT),  KC_LEFT,KC_NO,
                                               ALT_T(KC_APP),  KC_LGUI,
                                                               KC_SLEEP,
                                         KC_ENT,LGUI_T(KC_TAB),KC_NO,
