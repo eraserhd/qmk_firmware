@@ -13,7 +13,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * | SYMB   |   Q  |   W  |   E  |   R  |   T  | Meh  |           | Meh  |   Y  |   U  |   I  |   O  |   P  |   \    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * | CAPSL  |   A  |   S  |D/MNAV|F/SYMB|   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |' / SYMB|
+ * |CAP/SYMB|   A  |   S  |D/MNAV|F/SYMB|   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |' / SYMB|
  * |--------+------+------+------+------+------| Hyper|           |Hyper |------+------+------+------+------+--------|
  * | LShift |Z/Ctrl|X/Meta|   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |./Meta|//Ctrl| RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
@@ -33,7 +33,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         // left hand
         KC_EQL,      KC_1,         KC_2,   KC_3,   KC_4,   KC_5,   TD(TD_RESET),
         MO(SYMB),    KC_Q,         KC_W,   KC_E,   KC_R,   KC_T,   MEH_T(KC_NO),
-        KC_CAPSLOCK, KC_A,         KC_S,   LT(MNAV,KC_D),  LT(SYMB,KC_F),   KC_G,
+        LT(SYMB,KC_CAPSLOCK), KC_A,KC_S,   LT(MNAV,KC_D),  LT(SYMB,KC_F),   KC_G,
         KC_LSFT,     CTL_T(KC_Z),  X_META, KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
         KC_LALT,     KC_QUOT,      LALT(KC_LSFT),  KC_LEFT,KC_NO,
                                               ALT_T(KC_APP),  KC_LGUI,
