@@ -154,9 +154,6 @@ void matrix_scan_user(void) {
     SEQ_THREE_KEYS(KC_R, KC_E, KC_S) {
       reset_keyboard();
     }
-    SEQ_THREE_KEYS(KC_V, KC_E, KC_R) {
-      SEND_STRING (QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
-    }
   }
 };
 
