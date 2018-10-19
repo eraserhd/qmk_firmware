@@ -8,9 +8,13 @@
 #include "../../../../quantum/quantum_keycodes.h"
 #include "eraserhd.h"
 
+void _delay_ms(int ms) {
+}
+
 #include "soft_meta.h"
 
 #include <assert.h>
+#include <stdio.h>
 
 int offset;
 uint8_t codes[16];
@@ -106,4 +110,5 @@ int main(void) {
     assert(check(can_type_meta_x));
     assert(check(x_meta_can_be_typed_fastly_as_x));
     assert(check(dot_meta_can_be_typed_fastly_as_dot));
+    printf("\e[1;32mAll tests passed.\e[0m\n");
 }
