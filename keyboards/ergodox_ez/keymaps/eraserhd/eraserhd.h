@@ -15,7 +15,8 @@ enum custom_keycodes {
 };
 
 enum {
-    TD_RESET = 0
+    TD_RESET = 0,
+    TD_SLEEP
 };
 
 #endif /* keymap_h_INCLUDED */

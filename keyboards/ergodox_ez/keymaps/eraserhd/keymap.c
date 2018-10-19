@@ -22,9 +22,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                        ,-------------.       ,-------------.
  *                                        | App  | LGui |       | Alt  |  Esc |
  *                                 ,------|------|------|       |------+------+------.
- *                                 |      |      | Sleep|       | PgUp |      |      |
+ *                                 |      |      |      |       | PgUp |      |      |
  *                                 | Enter| Tab/ |------|       |------| Bksp |Space |
- *                                 |      | Cmd  |      |       | PgDn | /Cmd |      |
+ *                                 |      | Cmd  | Sleep|       | PgDn | /Cmd |      |
  *                                 `--------------------'       `--------------------'
  */
 // If it accepts an argument (i.e, is a function), it doesn't need KC_.
@@ -37,8 +37,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LSFT,     CTL_T(KC_Z),  X_META, KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
         KC_LALT,     KC_QUOT,      LALT(KC_LSFT),  KC_LEFT,KC_NO,
                                               ALT_T(KC_APP),  KC_LGUI,
-                                                              KC_SLEEP,
-                                        KC_ENT,LGUI_T(KC_TAB),KC_NO,
+                                                              KC_NO,
+                                        KC_ENT,LGUI_T(KC_TAB),TD(TD_SLEEP),
         // right hand
              KC_NO,       KC_6,  KC_7,   KC_8,   KC_9,   KC_0,           KC_MINS,
              MEH_T(KC_NO),KC_Y,  KC_U,   KC_I,   KC_O,   KC_P,           KC_BSLS,
@@ -142,8 +142,20 @@ void dance_reset_reset(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void dance_sleep_reset(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count >= 3) {
+        register_code(KC_LSFT);
+        register_code(KC_LCTL);
+        register_code(KC_POWER);
+        unregister_code(KC_POWER);
+        unregister_code(KC_LCTL);
+        unregister_code(KC_LSFT);
+    }
+}
+
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_RESET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, dance_reset_reset)
+    [TD_RESET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, dance_reset_reset),
+    [TD_SLEEP] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, dance_sleep_reset),
 };
 
 // Runs just one time when the keyboard initializes.
