@@ -3,15 +3,13 @@
 #include "action_layer.h"
 #include "version.h"
 
-LEADER_EXTERNS();
-
 #include "eraserhd.h"
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |   =    |   1  |   2  |   3  |   4  |   5  | LEFT |           |      |   6  |   7  |   8  |   9  |   0  |   -    |
+ * |   =    |   1  |   2  |   3  |   4  |   5  | RESET|           |      |   6  |   7  |   8  |   9  |   0  |   -    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * | SYMB   |   Q  |   W  |   E  |   R  |   T  | Meh  |           | Meh  |   Y  |   U  |   I  |   O  |   P  |   \    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -19,7 +17,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------| Hyper|           |Hyper |------+------+------+------+------+--------|
  * | LShift |Z/Ctrl|X/Meta|   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |./Meta|//Ctrl| RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | LAlt |  '"  |AltShf| Left |      |                                       |Leader| Down |   [  |   ]  | RAlt |
+ *   | LAlt |  '"  |AltShf| Left |      |                                       |      | Down |   [  |   ]  | RAlt |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        | App  | LGui |       | Alt  |  Esc |
@@ -33,7 +31,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Otherwise, it needs KC_*
 [BASE] = LAYOUT_ergodox(  // layer 0 : default
         // left hand
-        KC_EQL,      KC_1,         KC_2,   KC_3,   KC_4,   KC_5,   KC_LEFT,
+        KC_EQL,      KC_1,         KC_2,   KC_3,   KC_4,   KC_5,   TD(TD_RESET),
         MO(SYMB),    KC_Q,         KC_W,   KC_E,   KC_R,   KC_T,   MEH_T(KC_NO),
         KC_CAPSLOCK, KC_A,         KC_S,   LT(MNAV,KC_D),  LT(SYMB,KC_F),   KC_G,
         KC_LSFT,     CTL_T(KC_Z),  X_META, KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
@@ -46,7 +44,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
              MEH_T(KC_NO),KC_Y,  KC_U,   KC_I,   KC_O,   KC_P,           KC_BSLS,
                           KC_H,  KC_J,   KC_K,   KC_L,   KC_SCLN,        LT(SYMB,KC_QUOT),
              ALL_T(KC_NO),KC_N,  KC_M,   KC_COMM,DOT_META,CTL_T(KC_SLSH),KC_RSFT,
-                                 KC_LEAD,KC_DOWN,KC_LBRC,KC_RBRC,        KC_RALT,
+                                 KC_NO,  KC_DOWN,KC_LBRC,KC_RBRC,        KC_RALT,
              KC_LALT,        KC_ESC,
              KC_PGUP,
              KC_PGDN, LGUI_T(KC_BSPC), KC_SPC
@@ -138,23 +136,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #include "soft_meta.h"
 
+void dance_reset_reset(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count >= 3) {
+        reset_keyboard();
+    }
+}
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [TD_RESET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, dance_reset_reset)
+};
+
 // Runs just one time when the keyboard initializes.
 void matrix_init_user(void) {
 #ifdef RGBLIGHT_COLOR_LAYER_0
   rgblight_setrgb(RGBLIGHT_COLOR_LAYER_0);
 #endif
-};
-
-// Runs constantly in the background, in a loop.
-void matrix_scan_user(void) {
-  LEADER_DICTIONARY() {
-    leading = false;
-    leader_end();
-
-    SEQ_THREE_KEYS(KC_R, KC_E, KC_S) {
-      reset_keyboard();
-    }
-  }
 };
 
 // Runs whenever there is a layer state change.

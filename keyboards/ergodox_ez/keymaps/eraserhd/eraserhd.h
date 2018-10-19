@@ -14,4 +14,8 @@ enum custom_keycodes {
   DOT_META
 };
 
+enum {
+    TD_RESET = 0
+};
+
 #endif /* keymap_h_INCLUDED */
