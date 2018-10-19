@@ -57,10 +57,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
         }
         return false;
+    case KC_CAPSLOCK:
+        if (!record->event.pressed)
+            _delay_ms(50);
+        return true;
     default:
         if (meta_state.x_held || meta_state.dot_held) {
           switch (keycode) {
-          case KC_CAPSLOCK:
           case KC_SCROLLLOCK:
           case KC_NUMLOCK:
           case KC_LOCKING_CAPS:
