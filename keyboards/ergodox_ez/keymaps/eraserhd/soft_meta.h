@@ -40,12 +40,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
     case DOT_META:
         if (record->event.pressed) {
+            meta_state.time = record->event.time;
             meta_state.dot_held = true;
             meta_state.sent = false;
             meta_state.pressed = KC_NO;
         } else {
             meta_state.dot_held = false;
-            if (!meta_state.sent) {
+            if (!meta_state.sent && TIMER_DIFF_16(record->event.time, meta_state.time) < TAPPING_TERM) {
                 if (meta_state.x_held) {
                     meta_state.sent = true;
                     register_code(KC_ESC);

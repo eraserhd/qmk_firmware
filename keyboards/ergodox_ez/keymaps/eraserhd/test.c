@@ -109,8 +109,12 @@ int dot_meta_can_be_typed_fastly_as_dot[] = {
     PRESS, DOT_META, PRESS, KC_Q, RELEASE, DOT_META, RELEASE, KC_Q, END,
     PRESS, KC_DOT, RELEASE, KC_DOT, PRESS, KC_Q, RELEASE, KC_Q, END
 };
-int long_hold_of_x_does_nothing[] = {
+int long_hold_of_x_meta_does_nothing[] = {
     PRESS, X_META, DOWAIT, 200, RELEASE, X_META, END,
+    END
+};
+int long_hold_of_dot_meta_does_nothing[] = {
+    PRESS, DOT_META, DOWAIT, 200, RELEASE, DOT_META, END,
     END
 };
 
@@ -123,6 +127,7 @@ int main(void) {
     assert(check(can_type_meta_x));
     assert(check(x_meta_can_be_typed_fastly_as_x));
     assert(check(dot_meta_can_be_typed_fastly_as_dot));
-    assert(check(long_hold_of_x_does_nothing));
+    assert(check(long_hold_of_x_meta_does_nothing));
+    assert(check(long_hold_of_dot_meta_does_nothing));
     printf("\e[1;32mAll tests passed.\e[0m\n");
 }
