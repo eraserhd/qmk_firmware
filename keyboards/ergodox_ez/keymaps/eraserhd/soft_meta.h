@@ -1,5 +1,6 @@
 
 static struct {
+    uint16_t time;
     uint16_t pressed;
     bool x_held : 1;
     bool dot_held : 1;
@@ -17,12 +18,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
     case X_META:
         if (record->event.pressed) {
+            meta_state.time = record->event.time;
             meta_state.x_held = true;
             meta_state.sent = false;
             meta_state.pressed = KC_NO;
         } else {
             meta_state.x_held = false;
-            if (!meta_state.sent) {
+            if (!meta_state.sent && TIMER_DIFF_16(record->event.time, meta_state.time) < TAPPING_TERM) {
                 if (meta_state.dot_held) {
                     meta_state.sent = true;
                     register_code(KC_ESC);

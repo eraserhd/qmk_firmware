@@ -6,6 +6,8 @@
 #include "../../../../tmk_core/common/keycode.h"
 #include "../../../../tmk_core/common/action.h"
 #include "../../../../quantum/quantum_keycodes.h"
+#include "../../../../tmk_core/common/timer.h"
+#include "config.h"
 #include "eraserhd.h"
 
 void _delay_ms(int ms) {
@@ -35,21 +37,28 @@ void unregister_code(uint8_t keycode) {
 #define END -1
 #define PRESS -2
 #define RELEASE -3
+#define DOWAIT -4
 
 bool check(const int *test_case) {
     keyrecord_t record;
     bool process;
     int i;
 
+    record.event.time = 100;
+
     offset = 0;
     for (; *test_case != END; test_case += 2) {
-        record.event.pressed = (test_case[0] == PRESS);
-        process = process_record_user(test_case[1], &record);
-        if (process) {
-            if (record.event.pressed)
-                register_code(test_case[1]);
-            else
-                unregister_code(test_case[1]);
+        if (DOWAIT == test_case[0]) {
+            record.event.time += test_case[1];
+        } else {
+            record.event.pressed = (test_case[0] == PRESS);
+            process = process_record_user(test_case[1], &record);
+            if (process) {
+                if (record.event.pressed)
+                    register_code(test_case[1]);
+                else
+                    unregister_code(test_case[1]);
+            }
         }
     }
 
@@ -100,6 +109,10 @@ int dot_meta_can_be_typed_fastly_as_dot[] = {
     PRESS, DOT_META, PRESS, KC_Q, RELEASE, DOT_META, RELEASE, KC_Q, END,
     PRESS, KC_DOT, RELEASE, KC_DOT, PRESS, KC_Q, RELEASE, KC_Q, END
 };
+int long_hold_of_x_does_nothing[] = {
+    PRESS, X_META, DOWAIT, 200, RELEASE, X_META, END,
+    END
+};
 
 int main(void) {
     assert(check(x_meta_can_be_used_as_x));
@@ -110,5 +123,6 @@ int main(void) {
     assert(check(can_type_meta_x));
     assert(check(x_meta_can_be_typed_fastly_as_x));
     assert(check(dot_meta_can_be_typed_fastly_as_dot));
+    assert(check(long_hold_of_x_does_nothing));
     printf("\e[1;32mAll tests passed.\e[0m\n");
 }
