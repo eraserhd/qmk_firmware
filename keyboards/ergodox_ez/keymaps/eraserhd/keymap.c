@@ -3,7 +3,22 @@
 #include "action_layer.h"
 #include "version.h"
 
-#include "eraserhd.h"
+#define BASE 0 // default layer
+#define SYMB 1 // symbols & keyboard navigation
+#define MNAV 2 // media keys
+
+#define KC_SLEEP LSFT(LCTL(KC_POWER))
+
+enum custom_keycodes {
+  PLACEHOLDER = SAFE_RANGE, // can always be here
+  RGB_SLD,
+};
+
+enum {
+    TD_RESET = 0,
+    TD_SLEEP
+};
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
@@ -15,7 +30,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * |CAP/SYMB|   A  |   S  |D/MNAV|F/SYMB|   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |' / SYMB|
  * |--------+------+------+------+------+------| Hyper|           |Hyper |------+------+------+------+------+--------|
- * | LShift |Z/Ctrl|X/Meta|   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |./Meta|//Ctrl| RShift |
+ * | LShift |Z/LCtl|X/LAlt|   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |./RAlt|//RCtl| RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
  *   | LAlt |  '"  |AltShf| Left |      |                                       |      | Down |   [  |   ]  | RAlt |
  *   `----------------------------------'                                       `----------------------------------'
@@ -34,7 +49,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_EQL,      KC_1,         KC_2,   KC_3,   KC_4,   KC_5,   TD(TD_RESET),
         MO(SYMB),    KC_Q,         KC_W,   KC_E,   KC_R,   KC_T,   MEH_T(KC_NO),
         LT(SYMB,KC_CAPSLOCK), KC_A,KC_S,   LT(MNAV,KC_D),  LT(SYMB,KC_F),   KC_G,
-        KC_LSFT,     CTL_T(KC_Z),  X_META, KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
+        KC_LSFT,     LCTL_T(KC_Z), LALT_T(KC_X), KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
         KC_LALT,     KC_QUOT,      LALT(KC_LSFT),  KC_LEFT,KC_NO,
                                               ALT_T(KC_APP),  KC_LGUI,
                                                               KC_NO,
@@ -43,7 +58,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
              KC_NO,       KC_6,  KC_7,   KC_8,   KC_9,   KC_0,           KC_MINS,
              MEH_T(KC_NO),KC_Y,  KC_U,   KC_I,   KC_O,   KC_P,           KC_BSLS,
                           KC_H,  KC_J,   KC_K,   KC_L,   KC_SCLN,        LT(SYMB,KC_QUOT),
-             ALL_T(KC_NO),KC_N,  KC_M,   KC_COMM,DOT_META,CTL_T(KC_SLSH),KC_RSFT,
+             ALL_T(KC_NO),KC_N,  KC_M,   KC_COMM,RALT_T(KC_DOT),RCTL_T(KC_SLSH),KC_RSFT,
                                  KC_NO,  KC_DOWN,KC_LBRC,KC_RBRC,        KC_RALT,
              KC_LALT,        KC_ESC,
              KC_PGUP,
@@ -134,7 +149,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 };
 
-#include "soft_meta.h"
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+    case RGB_SLD:
+        if (record->event.pressed) {
+          #ifdef RGBLIGHT_ENABLE
+            rgblight_mode(1);
+          #endif
+        }
+        return false;
+    case KC_CAPSLOCK:
+        if (!record->event.pressed)
+            _delay_ms(50);
+        return true;
+    default:
+        return true;
+    }
+}
 
 void dance_reset_reset(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count >= 3) {
