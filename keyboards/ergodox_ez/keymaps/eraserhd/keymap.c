@@ -16,7 +16,8 @@ enum custom_keycodes {
 
 enum {
     TD_RESET = 0,
-    TD_SLEEP
+    TD_SLEEP,
+    TD_LED
 };
 
 
@@ -55,7 +56,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                               KC_NO,
                                         KC_ENT,LGUI_T(KC_TAB),TD(TD_SLEEP),
         // right hand
-             KC_NO,       KC_6,  KC_7,   KC_8,   KC_9,   KC_0,           KC_MINS,
+             TD(TD_LED),  KC_6,  KC_7,   KC_8,   KC_9,   KC_0,           KC_MINS,
              MEH_T(KC_NO),KC_Y,  KC_U,   KC_I,   KC_O,   KC_P,           KC_BSLS,
                           KC_H,  KC_J,   KC_K,   KC_L,   KC_SCLN,        LT(SYMB,KC_QUOT),
              ALL_T(KC_NO),KC_N,  KC_M,   KC_COMM,RALT_T(KC_DOT),RCTL_T(KC_SLSH),KC_RSFT,
@@ -184,9 +185,29 @@ void dance_sleep_reset(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void dance_led_reset(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count >= 3) {
+      static const uint8_t data[] = {0x00, 0x00, 0x00, 0xff, 0xff};
+      i2c_status_t ret = i2c_transmit(0x0A << 1, data, 5, ERGODOX_EZ_I2C_TIMEOUT);
+      switch (ret)
+      {
+      case I2C_STATUS_ERROR:
+          ergodox_right_led_1_on();
+          break;
+      case I2C_STATUS_TIMEOUT:
+          ergodox_right_led_2_on();
+          break;
+      case I2C_STATUS_SUCCESS:
+         ergodox_right_led_3_on();
+          break;
+      }
+  }
+}
+
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_RESET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, dance_reset_reset),
     [TD_SLEEP] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, dance_sleep_reset),
+    [TD_LED] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, dance_led_reset),
 };
 
 // Runs just one time when the keyboard initializes.
