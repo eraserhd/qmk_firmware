@@ -22,7 +22,6 @@ enum custom_keycodes {
 enum {
     TD_RESET = 0,
     TD_SLEEP,
-    TD_LED
 };
 
 
@@ -61,7 +60,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                               KC_NO,
                                         KC_ENT,LGUI_T(KC_TAB),TD(TD_SLEEP),
         // right hand
-             TD(TD_LED),  KC_6,  KC_7,   KC_8,   KC_9,   KC_0,           KC_MINS,
+             KC_NO,       KC_6,  KC_7,   KC_8,   KC_9,   KC_0,           KC_MINS,
              MEH_T(KC_NO),KC_Y,  KC_U,   KC_I,   KC_O,   KC_P,           KC_BSLS,
                           KC_H,  KC_J,   KC_K,   KC_L,   KC_SCLN,        LT(SYMB,KC_QUOT),
              ALL_T(KC_NO),KC_N,  KC_M,   KC_COMM,RALT_T(KC_DOT),RCTL_T(KC_SLSH),KC_RSFT,
@@ -186,7 +185,16 @@ void trackball_set_rgbw(uint8_t red, uint8_t green, uint8_t blue, uint8_t white)
     i2c_stop();
 }
 
-#define TRACKBALL_MOUSE_MULTIPLIER 6
+uint8_t mouse_offset(uint8_t positive, uint8_t negative)
+{
+    int16_t offset = (int16_t)positive - (int16_t)negative;
+    offset *= 6;
+    if (offset < -127)
+        offset = -127;
+    if (offset > 127)
+        offset = 127;
+    return offset;
+}
 
 void trackball_check_mouse(void)
 {
@@ -204,8 +212,8 @@ void trackball_check_mouse(void)
         mouse.buttons &= ~MOUSE_BTN1;
     }
 
-    mouse.x = (int8_t)(TRACKBALL_MOUSE_MULTIPLIER * ((int16_t)state[2] - (int16_t)state[3]));
-    mouse.y = (int8_t)(TRACKBALL_MOUSE_MULTIPLIER * ((int16_t)state[1] - (int16_t)state[0]));
+    mouse.x = mouse_offset(state[2], state[3]);
+    mouse.y = mouse_offset(state[1], state[0]);
     pointing_device_set_report(mouse);
 }
 
@@ -226,16 +234,9 @@ void dance_sleep_reset(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void dance_led_reset(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count >= 3) {
-        trackball_set_rgbw(0, 0, 255, 255);
-    }
-}
-
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_RESET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, dance_reset_reset),
     [TD_SLEEP] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, dance_sleep_reset),
-    [TD_LED] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, dance_led_reset),
 };
 
 // Runs just one time when the keyboard initializes.
@@ -248,8 +249,7 @@ void matrix_init_user(void) {
 
 static uint16_t counter = 0;
 void matrix_scan_user(void) {
-    if (++counter > 20)
-    {
+    if (++counter > 10) {
         trackball_check_mouse();
         counter = 0;
     }
