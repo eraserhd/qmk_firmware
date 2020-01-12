@@ -201,6 +201,9 @@ void trackball_check_mouse(void)
     } else {
         mouse.buttons &= ~MOUSE_BTN1;
     }
+
+    mouse.x = state[2] - state[3];
+    mouse.y = state[1] - state[0];
     pointing_device_set_report(mouse);
 }
 
