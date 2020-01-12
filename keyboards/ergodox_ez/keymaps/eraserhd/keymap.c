@@ -1,6 +1,7 @@
 #include QMK_KEYBOARD_H
 #include "debug.h"
 #include "action_layer.h"
+#include "pointing_device.h"
 #include "version.h"
 
 #define TRACKBALL_ADDRESS  0x0A
@@ -194,11 +195,13 @@ void trackball_check_mouse(void)
         return;
     }
 
+    report_mouse_t mouse = pointing_device_get_report();
     if (state[4] & (1<<7)) {
-        ergodox_right_led_2_on();
+        mouse.buttons |= MOUSE_BTN1;
     } else {
-        ergodox_right_led_2_off();
+        mouse.buttons &= ~MOUSE_BTN1;
     }
+    pointing_device_set_report(mouse);
 }
 
 void dance_reset_reset(qk_tap_dance_state_t *state, void *user_data) {
