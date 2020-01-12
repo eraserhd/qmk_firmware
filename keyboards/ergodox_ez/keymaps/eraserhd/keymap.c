@@ -186,6 +186,8 @@ void trackball_set_rgbw(uint8_t red, uint8_t green, uint8_t blue, uint8_t white)
     i2c_stop();
 }
 
+#define TRACKBALL_MOUSE_MULTIPLIER 6
+
 void trackball_check_mouse(void)
 {
     uint8_t state[5] = {};
@@ -202,8 +204,8 @@ void trackball_check_mouse(void)
         mouse.buttons &= ~MOUSE_BTN1;
     }
 
-    mouse.x = state[2] - state[3];
-    mouse.y = state[1] - state[0];
+    mouse.x = (int8_t)(TRACKBALL_MOUSE_MULTIPLIER * ((int16_t)state[2] - (int16_t)state[3]));
+    mouse.y = (int8_t)(TRACKBALL_MOUSE_MULTIPLIER * ((int16_t)state[1] - (int16_t)state[0]));
     pointing_device_set_report(mouse);
 }
 
