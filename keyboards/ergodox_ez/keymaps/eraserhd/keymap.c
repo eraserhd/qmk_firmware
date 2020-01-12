@@ -15,8 +15,8 @@
 #define KC_SLEEP LSFT(LCTL(KC_POWER))
 
 enum custom_keycodes {
-  PLACEHOLDER = SAFE_RANGE, // can always be here
-  RGB_SLD,
+    PLACEHOLDER = SAFE_RANGE, // can always be here
+    RGB_SLD,
 };
 
 enum {
