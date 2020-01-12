@@ -172,6 +172,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
+void trackball_set_rgbw(uint8_t red, uint8_t green, uint8_t blue, uint8_t white)
+{
+    i2c_status_t result = i2c_start(TRACKBALL_WRITE, ERGODOX_EZ_I2C_TIMEOUT);
+    if (result == I2C_STATUS_SUCCESS) {
+        i2c_write(0x00, ERGODOX_EZ_I2C_TIMEOUT);
+        i2c_write(red, ERGODOX_EZ_I2C_TIMEOUT);
+        i2c_write(green, ERGODOX_EZ_I2C_TIMEOUT);
+        i2c_write(blue, ERGODOX_EZ_I2C_TIMEOUT);
+        i2c_write(white, ERGODOX_EZ_I2C_TIMEOUT);
+    }
+    i2c_stop();
+}
+
 void dance_reset_reset(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count >= 3) {
         reset_keyboard();
@@ -190,22 +203,9 @@ void dance_sleep_reset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void dance_led_reset(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count >= 3) {
-      static const uint8_t data[] = {0x00, 0x00, 0x00, 0xff, 0xff};
-      i2c_status_t ret = i2c_transmit(TRACKBALL_WRITE, data, 5, ERGODOX_EZ_I2C_TIMEOUT);
-      switch (ret)
-      {
-      case I2C_STATUS_ERROR:
-          ergodox_right_led_1_on();
-          break;
-      case I2C_STATUS_TIMEOUT:
-          ergodox_right_led_2_on();
-          break;
-      case I2C_STATUS_SUCCESS:
-         ergodox_right_led_3_on();
-          break;
-      }
-  }
+    if (state->count >= 3) {
+        trackball_set_rgbw(0, 0, 255, 255);
+    }
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
@@ -216,8 +216,9 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 // Runs just one time when the keyboard initializes.
 void matrix_init_user(void) {
+    trackball_set_rgbw(0x0,0x0,0x0,0x0);
 #ifdef RGBLIGHT_COLOR_LAYER_0
-  rgblight_setrgb(RGBLIGHT_COLOR_LAYER_0);
+    rgblight_setrgb(RGBLIGHT_COLOR_LAYER_0);
 #endif
 };
 
