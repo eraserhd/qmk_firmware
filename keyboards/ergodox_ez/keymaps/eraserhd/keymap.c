@@ -3,6 +3,10 @@
 #include "action_layer.h"
 #include "version.h"
 
+#define TRACKBALL_ADDRESS  0x0A
+#define TRACKBALL_WRITE    ((TRACKBALL_ADDRESS<<1)|I2C_WRITE)
+#define TRACKBALL_READ     ((TRACKBALL_ADDRESS<<1)|I2C_READ)
+
 #define BASE 0 // default layer
 #define SYMB 1 // symbols & keyboard navigation
 #define MNAV 2 // media keys
@@ -188,7 +192,7 @@ void dance_sleep_reset(qk_tap_dance_state_t *state, void *user_data) {
 void dance_led_reset(qk_tap_dance_state_t *state, void *user_data) {
   if (state->count >= 3) {
       static const uint8_t data[] = {0x00, 0x00, 0x00, 0xff, 0xff};
-      i2c_status_t ret = i2c_transmit(0x0A << 1, data, 5, ERGODOX_EZ_I2C_TIMEOUT);
+      i2c_status_t ret = i2c_transmit(TRACKBALL_WRITE, data, 5, ERGODOX_EZ_I2C_TIMEOUT);
       switch (ret)
       {
       case I2C_STATUS_ERROR:
