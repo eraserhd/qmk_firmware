@@ -185,6 +185,22 @@ void trackball_set_rgbw(uint8_t red, uint8_t green, uint8_t blue, uint8_t white)
     i2c_stop();
 }
 
+void trackball_check_mouse(void)
+{
+    uint8_t state[5] = {};
+    i2c_status_t result = i2c_readReg(TRACKBALL_WRITE, 0x04, state, 5, ERGODOX_EZ_I2C_TIMEOUT);
+    if (result != I2C_STATUS_SUCCESS) {
+        ergodox_right_led_1_on();
+        return;
+    }
+
+    if (state[4] & (1<<7)) {
+        ergodox_right_led_2_on();
+    } else {
+        ergodox_right_led_2_off();
+    }
+}
+
 void dance_reset_reset(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count >= 3) {
         reset_keyboard();
@@ -220,7 +236,16 @@ void matrix_init_user(void) {
 #ifdef RGBLIGHT_COLOR_LAYER_0
     rgblight_setrgb(RGBLIGHT_COLOR_LAYER_0);
 #endif
-};
+}
+
+static uint16_t counter = 0;
+void matrix_scan_user(void) {
+    if (++counter > 20)
+    {
+        trackball_check_mouse();
+        counter = 0;
+    }
+}
 
 // Runs whenever there is a layer state change.
 uint32_t layer_state_set_user(uint32_t state) {
