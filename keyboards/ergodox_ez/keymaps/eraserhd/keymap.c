@@ -218,7 +218,7 @@ void trackball_check_mouse(void)
     int16_t y = mouse_offset(state[1], state[0]);
     if (scrolling) {
         mouse.h = x;
-        mouse.v = y;
+        mouse.v = -y;
     } else {
         mouse.x = x;
         mouse.y = y;
