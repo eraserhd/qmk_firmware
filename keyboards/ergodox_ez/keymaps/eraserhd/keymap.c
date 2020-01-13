@@ -196,6 +196,8 @@ uint8_t mouse_offset(uint8_t positive, uint8_t negative)
     return offset;
 }
 
+static uint8_t scrolling = 0;
+
 void trackball_check_mouse(void)
 {
     uint8_t state[5] = {};
@@ -212,8 +214,15 @@ void trackball_check_mouse(void)
         mouse.buttons &= ~MOUSE_BTN1;
     }
 
-    mouse.x = mouse_offset(state[2], state[3]);
-    mouse.y = mouse_offset(state[1], state[0]);
+    int16_t x = mouse_offset(state[2], state[3]);
+    int16_t y = mouse_offset(state[1], state[0]);
+    if (scrolling) {
+        mouse.h = x;
+        mouse.v = y;
+    } else {
+        mouse.x = x;
+        mouse.y = y;
+    }
     pointing_device_set_report(mouse);
 }
 
@@ -263,6 +272,10 @@ uint32_t layer_state_set_user(uint32_t state) {
   ergodox_right_led_3_off();
 
   uint8_t layer = biton32(state);
+  if (layer == MNAV)
+      scrolling = 1;
+  else
+      scrolling = 0;
   switch (layer) {
       case 0:
         #ifdef RGBLIGHT_COLOR_LAYER_0
