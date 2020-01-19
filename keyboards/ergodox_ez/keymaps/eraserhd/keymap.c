@@ -185,18 +185,29 @@ void trackball_set_rgbw(uint8_t red, uint8_t green, uint8_t blue, uint8_t white)
     i2c_stop();
 }
 
-uint8_t mouse_offset(uint8_t positive, uint8_t negative)
+int16_t mouse_offset(uint8_t positive, uint8_t negative)
 {
     int16_t offset = (int16_t)positive - (int16_t)negative;
-    offset *= 6;
-    if (offset < -127)
-        offset = -127;
-    if (offset > 127)
-        offset = 127;
-    return offset;
+    int16_t magnitude = 5*offset*offset;
+    return offset < 0 ? -magnitude : magnitude;
 }
 
 static uint8_t scrolling = 0;
+static int16_t x_offset = 0, y_offset = 0, h_offset = 0, v_offset = 0;
+
+void update_member(int8_t* member, int16_t* offset)
+{
+    if (*offset > 127) {
+        *member = 127;
+        *offset -= 127;
+    } else if (*offset < -127) {
+        *member = -127;
+        *offset += 127;
+    } else {
+        *member = *offset;
+        *offset = 0;
+    }
+}
 
 void trackball_check_mouse(void)
 {
@@ -204,7 +215,16 @@ void trackball_check_mouse(void)
     i2c_status_t result = i2c_readReg(TRACKBALL_WRITE, 0x04, state, 5, ERGODOX_EZ_I2C_TIMEOUT);
     if (result != I2C_STATUS_SUCCESS) {
         ergodox_right_led_1_on();
-        return;
+    } else {
+        int16_t x = mouse_offset(state[2], state[3]);
+        int16_t y = mouse_offset(state[1], state[0]);
+        if (scrolling) {
+            h_offset += x;
+            v_offset -= y;
+        } else {
+            x_offset += x;
+            y_offset += y;
+        }
     }
 
     report_mouse_t mouse = pointing_device_get_report();
@@ -213,16 +233,10 @@ void trackball_check_mouse(void)
     } else {
         mouse.buttons &= ~MOUSE_BTN1;
     }
-
-    int16_t x = mouse_offset(state[2], state[3]);
-    int16_t y = mouse_offset(state[1], state[0]);
-    if (scrolling) {
-        mouse.h = x;
-        mouse.v = -y;
-    } else {
-        mouse.x = x;
-        mouse.y = y;
-    }
+    update_member(&mouse.x, &x_offset);
+    update_member(&mouse.y, &y_offset);
+    update_member(&mouse.v, &v_offset);
+    update_member(&mouse.h, &h_offset);
     pointing_device_set_report(mouse);
 }
 
@@ -256,12 +270,8 @@ void matrix_init_user(void) {
 #endif
 }
 
-static uint16_t counter = 0;
 void matrix_scan_user(void) {
-    if (++counter > 10) {
-        trackball_check_mouse();
-        counter = 0;
-    }
+    trackball_check_mouse();
 }
 
 // Runs whenever there is a layer state change.
