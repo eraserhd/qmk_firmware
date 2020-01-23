@@ -185,10 +185,10 @@ void trackball_set_rgbw(uint8_t red, uint8_t green, uint8_t blue, uint8_t white)
     i2c_stop();
 }
 
-int16_t mouse_offset(uint8_t positive, uint8_t negative)
+int16_t mouse_offset(uint8_t positive, uint8_t negative, int16_t scale)
 {
     int16_t offset = (int16_t)positive - (int16_t)negative;
-    int16_t magnitude = 5*offset*offset;
+    int16_t magnitude = scale*offset*offset;
     return offset < 0 ? -magnitude : magnitude;
 }
 
@@ -219,14 +219,12 @@ void trackball_check_mouse(void)
     if (result != I2C_STATUS_SUCCESS) {
         ergodox_right_led_1_on();
     } else {
-        int16_t x = mouse_offset(state[2], state[3]);
-        int16_t y = mouse_offset(state[1], state[0]);
         if (scrolling) {
-            h_offset += x;
-            v_offset -= y;
+            h_offset += mouse_offset(state[2], state[3], 1);
+            v_offset -= mouse_offset(state[1], state[0], 1);
         } else {
-            x_offset += x;
-            y_offset += y;
+            x_offset += mouse_offset(state[2], state[3], 5);
+            y_offset += mouse_offset(state[1], state[0], 5);
         }
     }
 
