@@ -193,7 +193,10 @@ int16_t mouse_offset(uint8_t positive, uint8_t negative)
 }
 
 static uint8_t scrolling = 0;
-static int16_t x_offset = 0, y_offset = 0, h_offset = 0, v_offset = 0;
+static int16_t x_offset = 0;
+static int16_t y_offset = 0;
+static int16_t h_offset = 0;
+static int16_t v_offset = 0;
 
 void update_member(int8_t* member, int16_t* offset)
 {
