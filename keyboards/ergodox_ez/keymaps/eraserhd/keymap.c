@@ -11,6 +11,7 @@
 #define BASE 0 // default layer
 #define SYMB 1 // symbols & keyboard navigation
 #define MNAV 2 // media keys
+#define NUMB 3 // numbers
 
 #define KC_SLEEP LSFT(LCTL(KC_POWER))
 
@@ -31,7 +32,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |   =    |   1  |   2  |   3  |   4  |   5  | RESET|           |      |   6  |   7  |   8  |   9  |   0  |   -    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * | SYMB   |   Q  |   W  |   E  |   R  |   T  | Meh  |           | Meh  |   Y  |   U  |   I  |   O  |   P  |   \    |
+ * | NUMB   |   Q  |   W  |   E  |   R  |   T  | Meh  |           | Meh  |   Y  |   U  |   I  |   O  |   P  |   \    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * |CAP/SYMB|   A  |   S  |D/MNAV|F/SYMB|   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |' / SYMB|
  * |--------+------+------+------+------+------| Hyper|           |Hyper |------+------+------+------+------+--------|
@@ -52,7 +53,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [BASE] = LAYOUT_ergodox(  // layer 0 : default
         // left hand
         KC_EQL,      KC_1,         KC_2,   KC_3,   KC_4,   KC_5,   TD(TD_RESET),
-        MO(SYMB),    KC_Q,         KC_W,   KC_E,   KC_R,   KC_T,   MEH_T(KC_NO),
+        TT(NUMB),    KC_Q,         KC_W,   KC_E,   KC_R,   KC_T,   MEH_T(KC_NO),
         LT(SYMB,KC_CAPSLOCK), KC_A,KC_S,   LT(MNAV,KC_D),  LT(SYMB,KC_F),   KC_G,
         KC_LSFT,     LCTL_T(KC_Z), LALT_T(KC_X), KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
         KC_LALT,     KC_QUOT,      LALT(KC_LSFT),  KC_LEFT,KC_NO,
@@ -152,6 +153,49 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_TRNS,
        KC_TRNS, KC_TRNS, KC_WBAK
 ),
+/* Keymap 3: Basic layer
+ *
+ * ,--------------------------------------------------.           ,--------------------------------------------------.
+ * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
+ * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+ * | NUMB   |   Q  |   W  |   E  |   R  |   T  | Meh  |           | Meh  |   +  |   7  |   8  |   9  |   *  |        |
+ * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |CAP/SYMB|   A  |   S  |D/MNAV|F/SYMB|   G  |------|           |------|   -  |   4  |   5  |   6  |   /  |        |
+ * |--------+------+------+------+------+------| Hyper|           |Hyper |------+------+------+------+------+--------|
+ * | LShift |Z/LCtl|X/LAlt|   C  |   V  |   B  |      |           |      |   =  |   1  |   2  |   3  |   .  |        |
+ * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+ *   | LAlt |  '"  |AltShf| Left | NUMB |                                       |   0  |      |   [  |   ]  |      |
+ *   `----------------------------------'                                       `----------------------------------'
+ *                                        ,-------------.       ,-------------.
+ *                                        | App  | LGui |       | Alt  |  Esc |
+ *                                 ,------|------|------|       |------+------+------.
+ *                                 |      |      |      |       | PgUp |      |      |
+ *                                 | Enter| Tab/ |------|       |------| Bksp |  0   |
+ *                                 |      | Cmd  | Sleep|       | PgDn | /Cmd |      |
+ *                                 `--------------------'       `--------------------'
+ */
+// If it accepts an argument (i.e, is a function), it doesn't need KC_.
+// Otherwise, it needs KC_*
+[NUMB] = LAYOUT_ergodox(
+        // left hand
+        KC_NO,       KC_NO,        KC_NO,   KC_NO,  KC_NO,  KC_NO,  KC_NO,
+        TG(NUMB),    KC_Q,         KC_W,    KC_E,   KC_R,   KC_T,   MEH_T(KC_NO),
+        LT(SYMB,KC_CAPSLOCK), KC_A,KC_S,    LT(MNAV,KC_D),  LT(SYMB,KC_F),   KC_G,
+        KC_LSFT,     LCTL_T(KC_Z), LALT_T(KC_X), KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
+        KC_LALT,     KC_QUOT,      LALT(KC_LSFT),  KC_LEFT,TG(NUMB),
+                                              ALT_T(KC_APP),  KC_LGUI,
+                                                              KC_NO,
+                                        KC_ENT,LGUI_T(KC_TAB),TD(TD_SLEEP),
+        // right hand
+             KC_NO,       KC_NO,   KC_NO,  KC_NO,  KC_NO,  KC_NO,   KC_NO,
+             MEH_T(KC_NO),KC_PPLS, KC_7,   KC_8,   KC_9,   KC_PAST, KC_BSLS,
+                          KC_PMNS, KC_4,   KC_5,   KC_6,   KC_PSLS, LT(SYMB,KC_QUOT),
+             ALL_T(KC_NO),KC_PEQL, KC_1,   KC_2,   KC_3,   KC_DOT,  KC_RSFT,
+                                   KC_0,   KC_NO,  KC_LBRC,KC_RBRC, KC_NO,
+             KC_LALT,        KC_ESC,
+             KC_PGUP,
+             KC_PGDN, LGUI_T(KC_BSPC), KC_0
+    ),
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
