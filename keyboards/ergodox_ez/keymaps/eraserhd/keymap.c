@@ -158,13 +158,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * | NUMB   |   Q  |   W  |   E  |   R  |   T  | Meh  |           | Meh  |   +  |   7  |   8  |   9  |   *  |        |
+ * | NUMB   |      |      |   E  |      |      |      |           | Meh  |   +  |   7  |   8  |   9  |   *  |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |CAP/SYMB|   A  |   S  |D/MNAV|F/SYMB|   G  |------|           |------|   -  |   4  |   5  |   6  |   /  |        |
+ * | CAPS   |   A  |      |   D  |   F  |      |------|           |------|   -  |   4  |   5  |   6  |   /  |        |
  * |--------+------+------+------+------+------| Hyper|           |Hyper |------+------+------+------+------+--------|
- * | LShift |Z/LCtl|X/LAlt|   C  |   V  |   B  |      |           |      |   =  |   1  |   2  |   3  |   .  |        |
+ * | LShift | LCtl | LAlt |   C  |      |   B  |      |           |      |   =  |   1  |   2  |   3  |   .  | RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | LAlt |  '"  |AltShf| Left | NUMB |                                       |   0  |      |   [  |   ]  |      |
+ *   |      |      |      |      |      |                                       |   0  |      |   [  |   ]  |      |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        | App  | LGui |       | Alt  |  Esc |
@@ -179,10 +179,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [NUMB] = LAYOUT_ergodox(
         // left hand
         KC_NO,       KC_NO,        KC_NO,   KC_NO,  KC_NO,  KC_NO,  KC_NO,
-        TG(NUMB),    KC_Q,         KC_W,    KC_E,   KC_R,   KC_T,   MEH_T(KC_NO),
-        LT(SYMB,KC_CAPSLOCK), KC_A,KC_S,    LT(MNAV,KC_D),  LT(SYMB,KC_F),   KC_G,
-        KC_LSFT,     LCTL_T(KC_Z), LALT_T(KC_X), KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
-        KC_LALT,     KC_QUOT,      LALT(KC_LSFT),  KC_LEFT,TG(NUMB),
+        TG(NUMB),    KC_NO,        KC_NO,   KC_E,   KC_NO,  KC_NO,  KC_NO,
+        KC_CAPSLOCK, KC_A,         KC_NO,   KC_D,   KC_F,   KC_NO,
+        KC_LSFT,     KC_LCTL,      KC_LALT, KC_C,   KC_NO,  KC_B,   ALL_T(KC_NO),
+        KC_NO,       KC_NO,        KC_NO,   KC_NO, KC_NO,
                                               ALT_T(KC_APP),  KC_LGUI,
                                                               KC_NO,
                                         KC_ENT,LGUI_T(KC_TAB),TD(TD_SLEEP),
