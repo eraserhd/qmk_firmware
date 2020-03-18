@@ -158,7 +158,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * | NUMB   |      |      |   E  |      |      |      |           | Meh  |   +  |   7  |   8  |   9  |   *  |        |
+ * | NUMB   |      |      |   E  |      |      |  Meh |           | Meh  |   +  |   7  |   8  |   9  |   *  |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * | CAPS   |   A  |      |   D  |   F  |      |------|           |------|   -  |   4  |   5  |   6  |   /  |        |
  * |--------+------+------+------+------+------| Hyper|           |Hyper |------+------+------+------+------+--------|
@@ -179,7 +179,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [NUMB] = LAYOUT_ergodox(
         // left hand
         KC_NO,       KC_NO,        KC_NO,   KC_NO,  KC_NO,  KC_NO,  KC_NO,
-        TG(NUMB),    KC_NO,        KC_NO,   KC_E,   KC_NO,  KC_NO,  KC_NO,
+        TG(NUMB),    KC_NO,        KC_NO,   KC_E,   KC_NO,  KC_NO,  MEH_T(KC_NO),
         KC_CAPSLOCK, KC_A,         KC_NO,   KC_D,   KC_F,   KC_NO,
         KC_LSFT,     KC_LCTL,      KC_LALT, KC_C,   KC_NO,  KC_B,   ALL_T(KC_NO),
         KC_NO,       KC_NO,        KC_NO,   KC_NO, KC_NO,
