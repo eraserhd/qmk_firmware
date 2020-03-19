@@ -25,51 +25,60 @@ enum {
     TD_SLEEP,
 };
 
+#define _RESET_    TD(TD_RESET)
+#define _CAP_SYMB_ LT(SYMB,KC_CAPSLOCK)
+#define _D_MNAV_   LT(MNAV,KC_D)
+#define _F_SYMB_   LT(SYMB,KC_F)
+#define _Z_LCtl_   LCTL_T(KC_Z)
+#define _X_LAlt_   LALT_T(KC_X)
+#define _Tab_Cmd   LGUI_T(KC_TAB)
+#define _Sleep_    TD(TD_SLEEP)
+#define _Qu_SYMB_  LT(SYMB,KC_QUOT)
+#define Dot_RAlt   RALT_T(KC_DOT)
+#define Slsh_Ctl   RCTL_T(KC_SLSH)
+#define Bspc_Cmd   LGUI_T(KC_BSPC)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-/* Keymap 0: Basic layer
- *
- * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |   =    |   1  |   2  |   3  |   4  |   5  | RESET|           |      |   6  |   7  |   8  |   9  |   0  |   -    |
- * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * | NUMB   |   Q  |   W  |   E  |   R  |   T  | Meh  |           | Meh  |   Y  |   U  |   I  |   O  |   P  |   \    |
- * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |CAP/SYMB|   A  |   S  |D/MNAV|F/SYMB|   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  |' / SYMB|
- * |--------+------+------+------+------+------| Hyper|           |Hyper |------+------+------+------+------+--------|
- * | LShift |Z/LCtl|X/LAlt|   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |./RAlt|//RCtl| RShift |
- * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | LAlt |  '"  |AltShf| Left |      |                                       |      | Down |   [  |   ]  | RAlt |
- *   `----------------------------------'                                       `----------------------------------'
- *                                        ,-------------.       ,-------------.
- *                                        | App  | LGui |       | Alt  |  Esc |
- *                                 ,------|------|------|       |------+------+------.
- *                                 |      |      |      |       | PgUp |      |      |
- *                                 | Enter| Tab/ |------|       |------| Bksp |Space |
- *                                 |      | Cmd  | Sleep|       | PgDn | /Cmd |      |
- *                                 `--------------------'       `--------------------'
- */
-// If it accepts an argument (i.e, is a function), it doesn't need KC_.
-// Otherwise, it needs KC_*
 [BASE] = LAYOUT_ergodox(  // layer 0 : default
-        // left hand
-        KC_EQL,      KC_1,         KC_2,   KC_3,   KC_4,   KC_5,   TD(TD_RESET),
-        TT(NUMB),    KC_Q,         KC_W,   KC_E,   KC_R,   KC_T,   MEH_T(KC_NO),
-        LT(SYMB,KC_CAPSLOCK), KC_A,KC_S,   LT(MNAV,KC_D),  LT(SYMB,KC_F),   KC_G,
-        KC_LSFT,     LCTL_T(KC_Z), LALT_T(KC_X), KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
-        KC_LALT,     KC_QUOT,      LALT(KC_LSFT),  KC_LEFT,KC_NO,
-                                              ALT_T(KC_APP),  KC_LGUI,
-                                                              KC_NO,
-                                        KC_ENT,LGUI_T(KC_TAB),TD(TD_SLEEP),
+// ,----------------------------------------------------------------------.
+      KC_EQL  ,  KC_1   ,  KC_2   ,  KC_3   ,  KC_4   ,  KC_5   , _RESET_ ,
+// |----------+---------+---------+---------+---------+---------+---------|
+     TT(NUMB) ,  KC_Q   ,  KC_W   ,  KC_E   ,  KC_R   ,  KC_T   ,  KC_MEH ,
+// |----------+---------+---------+---------+---------+---------|         |
+    _CAP_SYMB_,  KC_A   ,  KC_S   ,_D_MNAV_ , _F_SYMB_,  KC_G ,//---------|
+// |----------+---------+---------+---------+---------+---------|         |
+     KC_LSFT  ,_Z_LCtl_ ,_X_LAlt_ ,  KC_C   ,  KC_V   ,   KC_B  , KC_HYPR ,
+// `----------+---------+---------+---------+---------+-------------------'
+      KC_LALT , XXXXXXX , XXXXXXX , XXXXXXX , XXXXXXX ,
+//   `------------------------------------------------'
+//                                                           ,-----------------.
+                                                               XXXXXXX, XXXXXXX,
+//                                                  ,--------|--------|--------|
+                                                                        XXXXXXX,
+//                                                  |        |        |--------|
+                                                      KC_ENT ,_Tab_Cmd, _Sleep_,
+//                                                  `--------------------------'
         // right hand
-             KC_NO,       KC_6,  KC_7,   KC_8,   KC_9,   KC_0,           KC_MINS,
-             MEH_T(KC_NO),KC_Y,  KC_U,   KC_I,   KC_O,   KC_P,           KC_BSLS,
-                          KC_H,  KC_J,   KC_K,   KC_L,   KC_SCLN,        LT(SYMB,KC_QUOT),
-             ALL_T(KC_NO),KC_N,  KC_M,   KC_COMM,RALT_T(KC_DOT),RCTL_T(KC_SLSH),KC_RSFT,
-                                 KC_NO,  KC_DOWN,KC_LBRC,KC_RBRC,        KC_RALT,
-             KC_LALT,        KC_ESC,
-             KC_PGUP,
-             KC_PGDN, LGUI_T(KC_BSPC), KC_SPC
-    ),
+//    ,----------------------------------------------------------------.
+         KC_NO ,  KC_6  ,  KC_7  ,  KC_8  ,  KC_9  ,  KC_0  ,  KC_MINS ,
+//    |--------+--------+--------+--------+--------+--------+----------|
+        KC_MEH ,  KC_Y  ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  ,  KC_BSLS ,
+//    |        |--------+--------+--------+--------+--------+----------|
+      /*------*/  KC_H  ,  KC_J  ,  KC_K  ,  KC_L  , KC_SCLN, _Qu_SYMB_,
+//    |        |--------+--------+--------+--------+--------+----------|
+        KC_HYPR,  KC_N  ,  KC_M  , KC_COMM,Dot_RAlt,Slsh_Ctl,  KC_RSFT ,
+//    `-----------------+--------+--------+--------+--------+----------'
+                          XXXXXXX, KC_DOWN, KC_LBRC, KC_RBRC, KC_RALT,
+//                      `--------------------------------------------'
+
+//  ,-----------------.
+      KC_LALT, KC_ESC ,
+//  |--------+--------+--------.
+      KC_PGUP,
+//  |--------|        |        |
+     KC_PGDN, Bspc_Cmd, KC_SPC
+//  `--------------------------'
+),
 /* Keymap 1: Symbol Layer
  *
  * ,---------------------------------------------------.          ,--------------------------------------------------.
