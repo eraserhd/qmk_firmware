@@ -18,6 +18,18 @@
 enum custom_keycodes {
     PLACEHOLDER = SAFE_RANGE, // can always be here
     RGB_SLD,
+
+    // Symbols when shifted, but dead when used as numerals
+    NOT_1,
+    NOT_2,
+    NOT_3,
+    NOT_4,
+    NOT_5,
+    NOT_6,
+    NOT_7,
+    NOT_8,
+    NOT_9,
+    NOT_0
 };
 
 enum {
@@ -43,7 +55,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [BASE] = LAYOUT_ergodox_pretty(
 // ,----------------------------------------------------------------------.       ,----------------------------------------------------------------.
-      KC_EQL  ,  KC_1   ,  KC_2   ,  KC_3   ,  KC_4   ,  KC_5   , _RESET_ ,         XXXXXXX,  KC_6  ,  KC_7  ,  KC_8  ,  KC_9  ,  KC_0  ,  KC_MINS ,
+      KC_EQL  ,  NOT_1  ,  NOT_2  ,  NOT_3  ,  NOT_4  ,  NOT_5  , _RESET_ ,         XXXXXXX,  NOT_6 ,  NOT_7 ,  NOT_8 ,  NOT_9 ,  NOT_0 ,  KC_MINS ,
 // |----------+---------+---------+---------+---------+---------+---------|       |--------+--------+--------+--------+--------+--------+----------|
      TT(NUMB) , _Q_Num_ ,  KC_W   ,  KC_E   ,  KC_R   ,  KC_T   ,  KC_MEH ,         KC_MEH ,  KC_Y  ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  ,  KC_BSLS ,
 // |----------+---------+---------+---------+---------+---------|         |       |        |--------+--------+--------+--------+--------+----------|
@@ -126,6 +138,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 };
 
+uint16_t not_keycodes[10] = { KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0 };
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
     case RGB_SLD:
@@ -135,6 +149,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           #endif
         }
         return false;
+    case NOT_1:
+    case NOT_2:
+    case NOT_3:
+    case NOT_4:
+    case NOT_5:
+    case NOT_6:
+    case NOT_7:
+    case NOT_8:
+    case NOT_9:
+    case NOT_0:
+        if ((keyboard_report->mods & MOD_BIT(KC_LSFT)) || (keyboard_report->mods & MOD_BIT(KC_RSFT))) {
+            if (record->event.pressed)
+                register_code(not_keycodes[keycode-NOT_1]);
+            else
+                unregister_code(not_keycodes[keycode-NOT_1]);
+        }
+        return true;
     case KC_CAPSLOCK:
         if (!record->event.pressed)
             _delay_ms(50);
