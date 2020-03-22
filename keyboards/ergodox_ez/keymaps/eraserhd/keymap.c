@@ -39,7 +39,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #define _RESET_    TD(TD_RESET)
 #define _CAP_SYMB_ LT(SYMB,KC_CAPSLOCK)
-#define _D_MNAV_   LT(MNAV,KC_D)
+#define _D_Num_    LT(NUMB,KC_D)
 #define _F_SYMB_   LT(SYMB,KC_F)
 #define _Z_LCtl_   LCTL_T(KC_Z)
 #define _X_LAlt_   LALT_T(KC_X)
@@ -49,15 +49,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define Dot_RAlt   RALT_T(KC_DOT)
 #define Slsh_Ctl   RCTL_T(KC_SLSH)
 #define Bspc_Cmd   LGUI_T(KC_BSPC)
-#define _Q_Num_    LT(NUMB,KC_Q)
+#define _Q_MNAV_   LT(MNAV,KC_Q)
 
 [BASE] = LAYOUT_ergodox_pretty(
 // ,----------------------------------------------------------------------.       ,----------------------------------------------------------------.
       KC_EQL  ,  NOT_1  ,  NOT_2  ,  NOT_3  ,  NOT_4  ,  NOT_5  , _RESET_ ,         XXXXXXX,  NOT_6 ,  NOT_7 ,  NOT_8 , XXXXXXX, XXXXXXX,  KC_MINS ,
 // |----------+---------+---------+---------+---------+---------+---------|       |--------+--------+--------+--------+--------+--------+----------|
-     TT(NUMB) , _Q_Num_ ,  KC_W   ,  KC_E   ,  KC_R   ,  KC_T   ,  KC_MEH ,         KC_MEH ,  KC_Y  ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  ,  KC_BSLS ,
+     TT(NUMB) ,_Q_MNAV_ ,  KC_W   ,  KC_E   ,  KC_R   ,  KC_T   ,  KC_MEH ,         KC_MEH ,  KC_Y  ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  ,  KC_BSLS ,
 // |----------+---------+---------+---------+---------+---------|         |       |        |--------+--------+--------+--------+--------+----------|
-    _CAP_SYMB_,  KC_A   ,  KC_S   ,_D_MNAV_ , _F_SYMB_,  KC_G  ,/*--------|       |-------*/  KC_H  ,  KC_J  ,  KC_K  ,  KC_L  , KC_SCLN, _Qu_SYMB_,
+    _CAP_SYMB_,  KC_A   ,  KC_S   , _D_Num_ , _F_SYMB_,  KC_G  ,/*--------|       |-------*/  KC_H  ,  KC_J  ,  KC_K  ,  KC_L  , KC_SCLN, _Qu_SYMB_,
 // |----------+---------+---------+---------+---------+---------|         |       |        |--------+--------+--------+--------+--------+----------|
      KC_LSPO  ,_Z_LCtl_ ,_X_LAlt_ ,  KC_C   ,  KC_V   ,   KC_B  , KC_HYPR ,         KC_HYPR,  KC_N  ,  KC_M  , KC_COMM,Dot_RAlt,Slsh_Ctl,  KC_RSPC ,
 // `----------+---------+---------+---------+---------+-------------------'       `-----------------+--------+--------+--------+--------+----------'
