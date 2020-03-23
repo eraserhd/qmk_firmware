@@ -18,17 +18,6 @@
 
 enum custom_keycodes {
     PLACEHOLDER = SAFE_RANGE, // can always be here
-    RGB_SLD,
-
-    // Symbols when shifted, but dead when used as numerals
-    NOT_1,
-    NOT_2,
-    NOT_3,
-    NOT_4,
-    NOT_5,
-    NOT_6,
-    NOT_7,
-    NOT_8,
 
     FKEY_0,
     FKEY_1,
@@ -65,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [BASE] = LAYOUT_ergodox_pretty(
 // ,----------------------------------------------------------------------.       ,----------------------------------------------------------------.
-      KC_EQL  ,  NOT_1  ,  NOT_2  ,  NOT_3  ,  NOT_4  ,  NOT_5  , _RESET_ ,         XXXXXXX,  NOT_6 ,  NOT_7 ,  NOT_8 , XXXXXXX, XXXXXXX,  KC_MINS ,
+      KC_EQL  ,   KC_1  ,  KC_2   ,   KC_3  ,   KC_4  ,   KC_5  , _RESET_ ,         XXXXXXX,   KC_6 ,   KC_7 ,   KC_8 , XXXXXXX, XXXXXXX,  KC_MINS ,
 // |----------+---------+---------+---------+---------+---------+---------|       |--------+--------+--------+--------+--------+--------+----------|
      TT(NUMB) ,_Q_MNAV_ ,  KC_W   ,  KC_E   ,  KC_R   ,  KC_T   ,  KC_MEH ,         KC_MEH ,  KC_Y  ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  ,  KC_BSLS ,
 // |----------+---------+---------+---------+---------+---------|         |       |        |--------+--------+--------+--------+--------+----------|
@@ -97,7 +86,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______ , _______ , _______ , _______ , _______ ,                                              _______ , _______, _______, _______, _______,
 //   `------------------------------------------------'                                             `--------------------------------------------'
 //                                                        ,-----------------.   ,-----------------.
-                                                           RGB_MOD , _______,    RGB_TOG , RGB_SLD,
+                                                           RGB_MOD , _______,    RGB_TOG , _______,
 //                                               ,--------|--------|--------|   |--------+--------+--------.
                                                                      _______,    _______ ,
 //                                               |        |        |--------|   |--------|        |        |
@@ -169,51 +158,40 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 };
 
-const uint16_t not_keycodes[10] = { KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0 };
 
 uint8_t fkey_number = 0;
+bool num_pressed = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-    case RGB_SLD:
-        if (record->event.pressed) {
-          #ifdef RGBLIGHT_ENABLE
-            rgblight_mode(1);
-          #endif
+    /* Disable unshifted number row */
+    case KC_1: case KC_2: case KC_3: case KC_4: case KC_5: case KC_6: case KC_7: case KC_8:
+        if (biton32(layer_state) != 0)
+            return true;
+        if (record->event.pressed && ((get_mods() & MOD_BIT(KC_LSFT)) || (get_mods() & MOD_BIT(KC_RSFT))))
+        {
+            num_pressed = true;
+            return true;
+        }
+        if (!record->event.pressed && num_pressed)
+        {
+            num_pressed = false;
+            return true;
         }
         return false;
-    case NOT_1:
-    case NOT_2:
-    case NOT_3:
-    case NOT_4:
-    case NOT_5:
-    case NOT_6:
-    case NOT_7:
-    case NOT_8:
-        if ((keyboard_report->mods & MOD_BIT(KC_LSFT)) || (keyboard_report->mods & MOD_BIT(KC_RSFT))) {
-            if (record->event.pressed)
-                register_code(not_keycodes[keycode-NOT_1]);
-            else
-                unregister_code(not_keycodes[keycode-NOT_1]);
-        }
-        return false;
-    case FKEY_0:
-    case FKEY_1:
-    case FKEY_2:
-    case FKEY_3:
-    case FKEY_4:
-    case FKEY_5:
-    case FKEY_6:
-    case FKEY_7:
-    case FKEY_8:
-    case FKEY_9:
+
+    /* Allow typing FKEY number on the key pad */
+    case FKEY_0: case FKEY_1: case FKEY_2: case FKEY_3: case FKEY_4: case FKEY_5: case FKEY_6: case FKEY_7: case FKEY_8: case FKEY_9:
         if (record->event.pressed)
             fkey_number = fkey_number * 10 + (keycode - FKEY_0);
         return false;
+
+    /* Defeat Mac OS's defeat of caps lock. */
     case KC_CAPSLOCK:
         if (!record->event.pressed)
             _delay_ms(50);
         return true;
+
     default:
         return true;
     }
