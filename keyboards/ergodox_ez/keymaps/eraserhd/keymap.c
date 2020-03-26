@@ -86,11 +86,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______ , _______ , _______ , _______ , _______ ,                                              _______ , _______, _______, _______, _______,
 //   `------------------------------------------------'                                             `--------------------------------------------'
 //                                                        ,-----------------.   ,-----------------.
-                                                           RGB_MOD , _______,    RGB_TOG , _______,
+                                                           _______ , _______,    _______ , _______,
 //                                               ,--------|--------|--------|   |--------+--------+--------.
                                                                      _______,    _______ ,
 //                                               |        |        |--------|   |--------|        |        |
-                                                  RGB_VAD , RGB_VAI, _______,    _______ , RGB_HUD, RGB_HUI
+                                                  _______ , _______, _______,    _______ , _______, _______
 //                                               `--------------------------'   `--------------------------'
 ),
 // MEDIA AND MOUSE
@@ -291,9 +291,6 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 // Runs just one time when the keyboard initializes.
 void matrix_init_user(void) {
     trackball_set_rgbw(0x0,0x0,0x0,0x0);
-#ifdef RGBLIGHT_COLOR_LAYER_0
-    rgblight_setrgb(RGBLIGHT_COLOR_LAYER_0);
-#endif
 }
 
 void matrix_scan_user(void) {
@@ -325,61 +322,31 @@ uint32_t layer_state_set_user(uint32_t state) {
       fkey_number = 0;
   }
   switch (layer) {
-      case 0:
-        #ifdef RGBLIGHT_COLOR_LAYER_0
-          rgblight_setrgb(RGBLIGHT_COLOR_LAYER_0);
-        #else
-        #ifdef RGBLIGHT_ENABLE
-          rgblight_init();
-        #endif
-        #endif
-        break;
       case 1:
         ergodox_right_led_1_on();
-        #ifdef RGBLIGHT_COLOR_LAYER_1
-          rgblight_setrgb(RGBLIGHT_COLOR_LAYER_1);
-        #endif
         break;
       case 2:
         ergodox_right_led_2_on();
-        #ifdef RGBLIGHT_COLOR_LAYER_2
-          rgblight_setrgb(RGBLIGHT_COLOR_LAYER_2);
-        #endif
         break;
       case 3:
         ergodox_right_led_3_on();
-        #ifdef RGBLIGHT_COLOR_LAYER_3
-          rgblight_setrgb(RGBLIGHT_COLOR_LAYER_3);
-        #endif
         break;
       case 4:
         ergodox_right_led_1_on();
         ergodox_right_led_2_on();
-        #ifdef RGBLIGHT_COLOR_LAYER_4
-          rgblight_setrgb(RGBLIGHT_COLOR_LAYER_4);
-        #endif
         break;
       case 5:
         ergodox_right_led_1_on();
         ergodox_right_led_3_on();
-        #ifdef RGBLIGHT_COLOR_LAYER_5
-          rgblight_setrgb(RGBLIGHT_COLOR_LAYER_5);
-        #endif
         break;
       case 6:
         ergodox_right_led_2_on();
         ergodox_right_led_3_on();
-        #ifdef RGBLIGHT_COLOR_LAYER_6
-          rgblight_setrgb(RGBLIGHT_COLOR_LAYER_6);
-        #endif
         break;
       case 7:
         ergodox_right_led_1_on();
         ergodox_right_led_2_on();
         ergodox_right_led_3_on();
-        #ifdef RGBLIGHT_COLOR_LAYER_7
-          rgblight_setrgb(RGBLIGHT_COLOR_LAYER_6);
-        #endif
         break;
       default:
         break;
