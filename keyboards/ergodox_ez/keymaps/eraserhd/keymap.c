@@ -65,11 +65,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       XXXXXXX , XXXXXXX , XXXXXXX , MO(FKEY), XXXXXXX ,                                               XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 //   `------------------------------------------------'                                             `--------------------------------------------'
 //                                                        ,-----------------.   ,-----------------.
-                                                            XXXXXXX, XXXXXXX,     KC_LALT, KC_ESC ,
+                                                            XXXXXXX, XXXXXXX,     XXXXXXX, KC_ESC ,
 //                                               ,--------|--------|--------|   |--------+--------+--------.
-                                                                     XXXXXXX,     KC_PGUP,
+                                                                     XXXXXXX,     XXXXXXX,
 //                                               |        |        |--------|   |--------|        |        |
-                                                   KC_ENT ,_Tab_Cmd, _Sleep_,    KC_PGDN ,Bspc_Cmd, KC_SPC
+                                                   KC_ENT ,_Tab_Cmd, _Sleep_,     XXXXXXX,Bspc_Cmd, KC_SPC
 //                                               `--------------------------'   `--------------------------'
 ),
 
