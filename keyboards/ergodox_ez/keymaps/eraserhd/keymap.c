@@ -54,9 +54,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [BASE] = LAYOUT_ergodox_pretty(
 // ,----------------------------------------------------------------------.       ,----------------------------------------------------------------.
-      KC_EQL  ,   KC_1  ,  KC_2   ,   KC_3  ,   KC_4  ,   KC_5  , _RESET_ ,         XXXXXXX,   KC_6 ,   KC_7 ,   KC_8 , XXXXXXX, XXXXXXX,  KC_MINS ,
+      XXXXXXX , XXXXXXX , XXXXXXX,  XXXXXXX , XXXXXXX , XXXXXXX , _RESET_ ,         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX ,
 // |----------+---------+---------+---------+---------+---------+---------|       |--------+--------+--------+--------+--------+--------+----------|
-     TT(NUMB) ,_Q_MNAV_ ,  KC_W   ,  KC_E   ,  KC_R   ,  KC_T   ,  KC_MEH ,         KC_MEH ,  KC_Y  ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  ,  KC_BSLS ,
+     KC_MINS  ,_Q_MNAV_ ,  KC_W   ,  KC_E   ,  KC_R   ,  KC_T   ,  KC_MEH ,         KC_MEH ,  KC_Y  ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  ,  KC_BSLS ,
 // |----------+---------+---------+---------+---------+---------|         |       |        |--------+--------+--------+--------+--------+----------|
     _CAP_SYMB_,  KC_A   ,  KC_S   , _D_Num_ , _F_SYMB_,  KC_G  ,/*--------|       |-------*/  KC_H  ,  KC_J  ,  KC_K  ,  KC_L  , KC_SCLN, _Qu_SYMB_,
 // |----------+---------+---------+---------+---------+---------|         |       |        |--------+--------+--------+--------+--------+----------|
@@ -160,26 +160,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 uint8_t fkey_number = 0;
-bool num_pressed = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-    /* Disable unshifted number row */
-    case KC_1: case KC_2: case KC_3: case KC_4: case KC_5: case KC_6: case KC_7: case KC_8:
-        if (biton32(layer_state) != 0)
-            return true;
-        if (record->event.pressed && ((get_mods() & MOD_BIT(KC_LSFT)) || (get_mods() & MOD_BIT(KC_RSFT))))
-        {
-            num_pressed = true;
-            return true;
-        }
-        if (!record->event.pressed && num_pressed)
-        {
-            num_pressed = false;
-            return true;
-        }
-        return false;
-
     /* Allow typing FKEY number on the key pad */
     case FKEY_0: case FKEY_1: case FKEY_2: case FKEY_3: case FKEY_4: case FKEY_5: case FKEY_6: case FKEY_7: case FKEY_8: case FKEY_9:
         if (record->event.pressed)
