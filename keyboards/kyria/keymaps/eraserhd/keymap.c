@@ -14,6 +14,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
+#include "debug.h"
+#include "action_layer.h"
+#include "pointing_device.h"
+#include "version.h"
 
 enum layers {
     BASE,
@@ -21,6 +25,24 @@ enum layers {
     MNAV,
     NUMB,
     FKEY
+};
+
+enum custom_keycodes {
+    FKEY_0 = SAFE_RANGE, // can always be here
+    FKEY_1,
+    FKEY_2,
+    FKEY_3,
+    FKEY_4,
+    FKEY_5,
+    FKEY_6,
+    FKEY_7,
+    FKEY_8,
+    FKEY_9,
+};
+
+enum {
+    TD_RESET = 0,
+    TD_SLEEP,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -47,8 +69,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // |-----------+---------+---------+---------+---------+--------+---------------.  ,---------------+---------+---------+---------+---------+---------+--------|
       KC_LSFT  ,_Z_LCtl_ ,_X_LAlt_ ,  KC_C   ,  KC_V   ,  KC_B  ,_______,_______,   _______, KC_ESC,  KC_N   ,  KC_M   , KC_COMM ,Dot_RAlt , Slsh_Ctl, KC_RSFT,
 // |-----------------------------+---------+---------+---------+--------+-------.  ,-------+-------+---------+---------+---------+----------------------------|
-                                   XXXXXXX , XXXXXXX , MO(FKEY), KC_ENT ,_Tab_Cmd,  Bspc_Cmd,KC_SPC, XXXXXXX , XXXXXXX , XXXXXXX
-//                              `-----------------------------------------------'  `---------------------------------------------'
+                                   _RESET_ , XXXXXXX , MO(FKEY), KC_ENT ,_Tab_Cmd,  Bspc_Cmd,KC_SPC, XXXXXXX , XXXXXXX , _Sleep_
+//                               `----------------------------------------------'  `---------------------------------------------'
     ),
 /*
  * Lower Layer: Symbols
@@ -118,6 +140,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 };
+
+uint8_t fkey_number = 0;
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+    /* Allow typing FKEY number on the key pad */
+    case FKEY_0: case FKEY_1: case FKEY_2: case FKEY_3: case FKEY_4: case FKEY_5: case FKEY_6: case FKEY_7: case FKEY_8: case FKEY_9:
+        if (record->event.pressed)
+            fkey_number = fkey_number * 10 + (keycode - FKEY_0);
+        return false;
+
+    /* Defeat Mac OS's defeat of caps lock. */
+    case KC_CAPSLOCK:
+        if (!record->event.pressed)
+            _delay_ms(50);
+        return true;
+
+    default:
+        return true;
+    }
+}
 
 #ifdef OLED_DRIVER_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
@@ -199,3 +242,26 @@ void encoder_update_user(uint8_t index, bool clockwise) {
     }
 }
 #endif
+
+void dance_reset_reset(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count >= 3) {
+        reset_keyboard();
+    }
+}
+
+void dance_sleep_reset(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count >= 3) {
+        register_code(KC_LSFT);
+        register_code(KC_LCTL);
+        register_code(KC_POWER);
+        unregister_code(KC_POWER);
+        unregister_code(KC_LCTL);
+        unregister_code(KC_LSFT);
+    }
+}
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [TD_RESET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, dance_reset_reset),
+    [TD_SLEEP] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, NULL, dance_sleep_reset),
+};
+

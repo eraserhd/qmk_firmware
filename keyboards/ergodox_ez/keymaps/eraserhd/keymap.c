@@ -1,8 +1,4 @@
 #include QMK_KEYBOARD_H
-#include "debug.h"
-#include "action_layer.h"
-#include "pointing_device.h"
-#include "version.h"
 
 #define TRACKBALL_ADDRESS  0x0A
 #define TRACKBALL_WRITE    ((TRACKBALL_ADDRESS<<1)|I2C_WRITE)
