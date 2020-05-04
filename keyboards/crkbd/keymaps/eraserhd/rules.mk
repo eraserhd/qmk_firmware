@@ -1,3 +1,4 @@
+POINTING_DEVICE_ENABLE = yes
 UNICODE_ENABLE = yes
 
 # If you want to change the display of OLED, you need to change here
