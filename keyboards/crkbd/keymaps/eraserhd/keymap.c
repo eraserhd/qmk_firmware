@@ -42,23 +42,23 @@ enum custom_keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-#define _CAP__Symbol_ LT(_Symbol,KC_CAPSLOCK)
+#define _CAP_Symb_ LT(_Symbol,KC_CAPSLOCK)
 #define _D_Num_    LT(_Number,KC_D)
 #define _F__Symbol_   LT(_Symbol,KC_F)
 #define _Z_LCtl_   LCTL_T(KC_Z)
 #define _X_LAlt_   LALT_T(KC_X)
 #define _Tab_Cmd   LGUI_T(KC_TAB)
-#define _Qu__Symbol_  LT(_Symbol,KC_QUOT)
+#define _Qu_Symb_  LT(_Symbol,KC_QUOT)
 #define Dot_RAlt   RALT_T(KC_DOT)
 #define Slsh_Ctl   RCTL_T(KC_SLSH)
 #define Bspc_Cmd   LGUI_T(KC_BSPC)
-#define _Q__Mouse_   LT(_Mouse,KC_Q)
+#define _Q_Mouse_   LT(_Mouse,KC_Q)
 
     [_Qwerty] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      KC_MINS,_Q__Mouse_,  KC_W  ,  KC_E  ,  KC_R  ,  KC_T  ,                        KC_Y ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  , KC_BSLS,
+      KC_MINS,_Q_Mouse_,  KC_W  ,  KC_E  ,  KC_R  ,  KC_T  ,                        KC_Y ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  , KC_BSLS,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-     _CAP__Symbol_,KC_A  ,  KC_S  ,_D_Num_ ,  KC_F  ,  KC_G  ,                        KC_H ,  KC_J  ,  KC_K  ,  KC_L  , KC_SCLN ,_Qu__Symbol_,
+   _CAP_Symb_,  KC_A  ,  KC_S  ,_D_Num_ ,  KC_F  ,  KC_G  ,                        KC_H ,  KC_J  ,  KC_K  ,  KC_L  , KC_SCLN ,_Qu_Symb_,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,_Z_LCtl_,_X_LAlt_,  KC_C  ,  KC_V  ,  KC_B  ,                        KC_N ,  KC_M  , KC_COMM,Dot_RAlt,Slsh_Ctl, KC_RSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
