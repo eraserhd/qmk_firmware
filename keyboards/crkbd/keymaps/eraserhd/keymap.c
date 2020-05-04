@@ -15,7 +15,7 @@ enum layers {
     _Qwerty,
     _Symbol,
     _Mouse,
-    NUMB,
+    _Number,
     FKEY
 };
 
@@ -41,7 +41,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #define _RESET_    TD(TD_RESET)
 #define _CAP__Symbol_ LT(_Symbol,KC_CAPSLOCK)
-#define _D_Num_    LT(NUMB,KC_D)
+#define _D_Num_    LT(_Number,KC_D)
 #define _F__Symbol_   LT(_Symbol,KC_F)
 #define _Z_LCtl_   LCTL_T(KC_Z)
 #define _X_LAlt_   LALT_T(KC_X)
@@ -87,7 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                           _______, _______, _______,    _______, _______, _______
                                       //`--------------------------'  `--------------------------'
     ),
-    [NUMB] = LAYOUT(
+    [_Number] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       _______, _______, _______,   KC_E , _______, _______,                      KC_MINS,  KC_7  ,  KC_8  ,  KC_9  , KC_ASTR, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
