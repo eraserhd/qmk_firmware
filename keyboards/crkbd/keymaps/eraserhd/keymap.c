@@ -19,6 +19,14 @@ enum layers {
     _FnKeys
 };
 
+PROGMEM char const* const layer_names[] = {
+    "Qwerty",
+    "Symbol",
+    "Mouse",
+    "Number",
+    "FnKeys",
+};
+
 enum custom_keycodes {
     FKEY_0 = SAFE_RANGE, // can always be here
     FKEY_1,
@@ -148,7 +156,7 @@ const char *read_keylog(void);
 const char *read_keylogs(void);
 
 // const char *read_mode_icon(bool swap);
-// const char *read_host_led_state(void);
+const char *read_host_led_state(void);
 // void set_timelog(void);
 // const char *read_timelog(void);
 
@@ -156,14 +164,22 @@ void matrix_scan_user(void) {
    iota_gfx_task();
 }
 
+const char *read_layer_state() {
+    uint8_t layer = biton32(layer_state);
+    if (layer < sizeof(layer_names)/sizeof(layer_names[0]))
+        return layer_names[layer];
+    else
+        return "Unknown";
+}
+
 void matrix_render_user(struct CharacterMatrix *matrix) {
   if (is_master) {
     // If you want to change the display of OLED, you need to change here
     matrix_write_ln(matrix, read_layer_state());
-    matrix_write_ln(matrix, read_keylog());
+    //matrix_write_ln(matrix, read_keylog());
     //matrix_write_ln(matrix, read_keylogs());
     //matrix_write_ln(matrix, read_mode_icon(keymap_config.swap_lalt_lgui));
-    //matrix_write_ln(matrix, read_host_led_state());
+    matrix_write_ln(matrix, read_host_led_state());
     //matrix_write_ln(matrix, read_timelog());
   } else {
     matrix_write(matrix, read_logo());
