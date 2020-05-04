@@ -12,7 +12,7 @@ extern rgblight_config_t rgblight_config;
 extern uint8_t is_master;
 
 enum layers {
-    BASE,
+    _Qwerty,
     SYMB,
     MNAV,
     NUMB,
@@ -53,7 +53,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define Bspc_Cmd   LGUI_T(KC_BSPC)
 #define _Q_MNAV_   LT(MNAV,KC_Q)
 
-    [BASE] = LAYOUT(
+    [_Qwerty] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_MINS,_Q_MNAV_,  KC_W  ,  KC_E  ,  KC_R  ,  KC_T  ,                        KC_Y ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  , KC_BSLS,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
