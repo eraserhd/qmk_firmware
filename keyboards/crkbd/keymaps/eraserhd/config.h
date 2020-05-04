@@ -20,6 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#define LEADER_TIMEOUT 800
+#define PERMISSIVE_HOLD
+#define QMK_KEYS_PER_SCAN 4
+#define TAPPING_TERM 200
 //#define USE_MATRIX_I2C
 
 /* Select hand configuration */
@@ -31,9 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SSD1306OLED
 
 #define USE_SERIAL_PD2
-
-#define TAPPING_FORCE_HOLD
-#define TAPPING_TERM 100
 
 #ifdef RGBLIGHT_ENABLE
     #undef RGBLED_NUM
