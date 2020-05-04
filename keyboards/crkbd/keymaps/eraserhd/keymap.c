@@ -13,7 +13,7 @@ extern uint8_t is_master;
 
 enum layers {
     _Qwerty,
-    SYMB,
+    _Symbol,
     MNAV,
     NUMB,
     FKEY
@@ -40,14 +40,14 @@ enum {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #define _RESET_    TD(TD_RESET)
-#define _CAP_SYMB_ LT(SYMB,KC_CAPSLOCK)
+#define _CAP__Symbol_ LT(_Symbol,KC_CAPSLOCK)
 #define _D_Num_    LT(NUMB,KC_D)
-#define _F_SYMB_   LT(SYMB,KC_F)
+#define _F__Symbol_   LT(_Symbol,KC_F)
 #define _Z_LCtl_   LCTL_T(KC_Z)
 #define _X_LAlt_   LALT_T(KC_X)
 #define _Tab_Cmd   LGUI_T(KC_TAB)
 #define _Sleep_    TD(TD_SLEEP)
-#define _Qu_SYMB_  LT(SYMB,KC_QUOT)
+#define _Qu__Symbol_  LT(_Symbol,KC_QUOT)
 #define Dot_RAlt   RALT_T(KC_DOT)
 #define Slsh_Ctl   RCTL_T(KC_SLSH)
 #define Bspc_Cmd   LGUI_T(KC_BSPC)
@@ -57,7 +57,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_MINS,_Q_MNAV_,  KC_W  ,  KC_E  ,  KC_R  ,  KC_T  ,                        KC_Y ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  , KC_BSLS,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-     _CAP_SYMB_,KC_A  ,  KC_S  ,_D_Num_ ,  KC_F  ,  KC_G  ,                        KC_H ,  KC_J  ,  KC_K  ,  KC_L  , KC_SCLN ,_Qu_SYMB_,
+     _CAP__Symbol_,KC_A  ,  KC_S  ,_D_Num_ ,  KC_F  ,  KC_G  ,                        KC_H ,  KC_J  ,  KC_K  ,  KC_L  , KC_SCLN ,_Qu__Symbol_,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,_Z_LCtl_,_X_LAlt_,  KC_C  ,  KC_V  ,  KC_B  ,                        KC_N ,  KC_M  , KC_COMM,Dot_RAlt,Slsh_Ctl, KC_RSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -65,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                       //`--------------------------'  `--------------------------'
 
     ),
-    [SYMB] = LAYOUT(
+    [_Symbol] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       _______, KC_EXLM, KC_TILD, KC_LCBR, KC_RCBR, KC_AMPR,                      KC_HOME, _______, KC_INS , KC_END , KC_PGUP, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
