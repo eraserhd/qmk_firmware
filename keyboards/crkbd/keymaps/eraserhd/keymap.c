@@ -16,7 +16,7 @@ enum layers {
     _Symbol,
     _Mouse,
     _Number,
-    FKEY
+    _FnKeys
 };
 
 enum custom_keycodes {
@@ -61,7 +61,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,_Z_LCtl_,_X_LAlt_,  KC_C  ,  KC_V  ,  KC_B  ,                        KC_N ,  KC_M  , KC_COMM,Dot_RAlt,Slsh_Ctl, KC_RSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                         MO(FKEY), KC_ENT ,_Tab_Cmd,   Bspc_Cmd, KC_SPC , KC_ESC
+                                      MO(_FnKeys), KC_ENT ,_Tab_Cmd,   Bspc_Cmd, KC_SPC , KC_ESC
                                       //`--------------------------'  `--------------------------'
 
     ),
@@ -98,7 +98,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                           _______, _______, _______,    _______, _______,  KC_0
                                       //`--------------------------'  `--------------------------'
     ),
-    [FKEY] = LAYOUT(
+    [_FnKeys] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       _______, _______, _______, _______, _______, _______,                      _______, FKEY_7 , FKEY_8 , FKEY_9 , _______, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -212,7 +212,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 uint32_t layer_state_set_user(uint32_t state) {
   uint8_t layer = biton32(state);
-  if (layer != FKEY && fkey_number > 0) {
+  if (layer != _FnKeys && fkey_number > 0) {
       if (fkey_number <= 12) {
           uint16_t code = KC_F1 - 1 + fkey_number;
           register_code(code);
