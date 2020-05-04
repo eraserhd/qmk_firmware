@@ -186,7 +186,6 @@ void iota_gfx_task_user(void) {
 #endif//SSD1306OLED
 
 uint8_t fkey_number = 0;
-uint8_t scrolling = 0;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
@@ -213,10 +212,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 uint32_t layer_state_set_user(uint32_t state) {
   uint8_t layer = biton32(state);
-  if (layer == MNAV)
-      scrolling = 1;
-  else
-      scrolling = 0;
   if (layer != FKEY && fkey_number > 0) {
       if (fkey_number <= 12) {
           uint16_t code = KC_F1 - 1 + fkey_number;
