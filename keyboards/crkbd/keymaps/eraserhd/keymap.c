@@ -40,21 +40,14 @@ enum custom_keycodes {
     FKEY_9,
 };
 
-enum {
-    TD_RESET = 0,
-    TD_SLEEP,
-};
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-#define _RESET_    TD(TD_RESET)
 #define _CAP__Symbol_ LT(_Symbol,KC_CAPSLOCK)
 #define _D_Num_    LT(_Number,KC_D)
 #define _F__Symbol_   LT(_Symbol,KC_F)
 #define _Z_LCtl_   LCTL_T(KC_Z)
 #define _X_LAlt_   LALT_T(KC_X)
 #define _Tab_Cmd   LGUI_T(KC_TAB)
-#define _Sleep_    TD(TD_SLEEP)
 #define _Qu__Symbol_  LT(_Symbol,KC_QUOT)
 #define Dot_RAlt   RALT_T(KC_DOT)
 #define Slsh_Ctl   RCTL_T(KC_SLSH)
@@ -120,20 +113,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 int RGB_current_mode;
-
-void persistent_default_layer_set(uint16_t default_layer) {
-  eeconfig_update_default_layer(default_layer);
-  default_layer_set(default_layer);
-}
-
-// Setting ADJUST layer RGB back to default
-void update_tri_layer_RGB(uint8_t layer1, uint8_t layer2, uint8_t layer3) {
-  if (IS_LAYER_ON(layer1) && IS_LAYER_ON(layer2)) {
-    layer_on(layer3);
-  } else {
-    layer_off(layer3);
-  }
-}
 
 void matrix_init_user(void) {
     #ifdef RGBLIGHT_ENABLE
