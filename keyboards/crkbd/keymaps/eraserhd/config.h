@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TAPPING_TERM 200
 //#define USE_MATRIX_I2C
 
+#define USB_MAX_POWER_CONSUMPTION 400
+
 /* Select hand configuration */
 
 // #define MASTER_LEFT
