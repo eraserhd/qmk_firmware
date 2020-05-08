@@ -16,7 +16,8 @@ enum layers {
     _Symbol,
     _Mouse,
     _Number,
-    _FnKeys
+    _FnKeys,
+    _Window
 };
 
 enum custom_keycodes {
@@ -30,25 +31,31 @@ enum custom_keycodes {
     FKEY_7,
     FKEY_8,
     FKEY_9,
+
+    WIN_H,
+    WIN_J,
+    WIN_K,
+    WIN_L
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-#define _CAP_Symb_ LT(_Symbol,KC_CAPSLOCK)
-#define _D_Num_    LT(_Number,KC_D)
-#define _F__Symbol_   LT(_Symbol,KC_F)
-#define _Z_LCtl_   LCTL_T(KC_Z)
-#define _X_LAlt_   LALT_T(KC_X)
-#define _Tab_Cmd   LGUI_T(KC_TAB)
-#define _Qu_Symb_  LT(_Symbol,KC_QUOT)
-#define Dot_RAlt   RALT_T(KC_DOT)
-#define Slsh_Ctl   RCTL_T(KC_SLSH)
-#define Bspc_Cmd   LGUI_T(KC_BSPC)
+#define _CAP_Symb_  LT(_Symbol,KC_CAPSLOCK)
+#define _D_Num_     LT(_Number,KC_D)
+#define _F__Symbol_ LT(_Symbol,KC_F)
+#define _Z_LCtl_    LCTL_T(KC_Z)
+#define _X_LAlt_    LALT_T(KC_X)
+#define _Tab_Cmd    LGUI_T(KC_TAB)
+#define _Qu_Symb_   LT(_Symbol,KC_QUOT)
+#define Dot_RAlt    RALT_T(KC_DOT)
+#define Slsh_Ctl    RCTL_T(KC_SLSH)
+#define Bspc_Cmd    LGUI_T(KC_BSPC)
 #define _Q_Mouse_   LT(_Mouse,KC_Q)
+#define _W_Win_     LT(_Window,KC_W)
 
     [_Qwerty] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      KC_MINS,_Q_Mouse_,  KC_W  ,  KC_E  ,  KC_R  ,  KC_T  ,                        KC_Y ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  , KC_BSLS,
+      KC_MINS,_Q_Mouse_,_W_Win_,  KC_E  ,  KC_R  ,  KC_T  ,                        KC_Y ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  , KC_BSLS,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
    _CAP_Symb_,  KC_A  ,  KC_S  ,_D_Num_ ,  KC_F  ,  KC_G  ,                        KC_H ,  KC_J  ,  KC_K  ,  KC_L  , KC_SCLN ,_Qu_Symb_,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -100,6 +107,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______,                      _______, FKEY_1 , FKEY_2 , FKEY_3 , _______, _______,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           _______, _______, _______,    _______, _______, FKEY_0
+                                      //`--------------------------'  `--------------------------'
+    ),
+    [_Window] = LAYOUT(
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+      _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          _______, _______, _______,    _______, _______, _______
                                       //`--------------------------'  `--------------------------'
     ),
 };
@@ -173,11 +191,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #endif
     // set_timelog();
   }
-  switch (keycode) {
+
+  if (record->event.pressed && layer_state_is(_Window))
+  {
+      register_code(KC_F13);
+      unregister_code(KC_F13);
+  }
+
+  switch (keycode)
+  {
   case FKEY_0: case FKEY_1: case FKEY_2: case FKEY_3: case FKEY_4: case FKEY_5: case FKEY_6: case FKEY_7: case FKEY_8: case FKEY_9:
       if (record->event.pressed)
           fkey_number = fkey_number * 10 + (keycode - FKEY_0);
       return false;
+
   /* Defeat Mac OS's defeat of caps lock. */
   case KC_CAPSLOCK:
       if (!record->event.pressed)
