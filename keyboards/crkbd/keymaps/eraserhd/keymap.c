@@ -31,11 +31,6 @@ enum custom_keycodes {
     FKEY_7,
     FKEY_8,
     FKEY_9,
-
-    WIN_H,
-    WIN_J,
-    WIN_K,
-    WIN_L
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
