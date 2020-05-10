@@ -183,9 +183,12 @@ void iota_gfx_task_user(void) {
 #endif//SSD1306OLED
 
 uint8_t fkey_number = 0;
+bool in_window_layer = false;
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if (record->event.pressed) {
+bool process_record_user(uint16_t keycode, keyrecord_t *record)
+{
+  if (record->event.pressed)
+  {
 #ifdef SSD1306OLED
     set_keylog(keycode, record);
 #endif
@@ -194,7 +197,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   switch (keycode)
   {
-  case FKEY_0: case FKEY_1: case FKEY_2: case FKEY_3: case FKEY_4: case FKEY_5: case FKEY_6: case FKEY_7: case FKEY_8: case FKEY_9:
+  case FKEY_0 ... FKEY_9:
       if (record->event.pressed)
           fkey_number = fkey_number * 10 + (keycode - FKEY_0);
       return false;
@@ -211,7 +214,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
-bool in_window_layer = false;
 
 uint32_t layer_state_set_user(uint32_t state) {
   uint8_t layer = biton32(state);
