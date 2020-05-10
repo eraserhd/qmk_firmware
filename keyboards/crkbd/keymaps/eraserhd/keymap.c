@@ -192,12 +192,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // set_timelog();
   }
 
-  if (record->event.pressed && layer_state_is(_Window))
-  {
-      register_code(KC_F13);
-      unregister_code(KC_F13);
-  }
-
   switch (keycode)
   {
   case FKEY_0: case FKEY_1: case FKEY_2: case FKEY_3: case FKEY_4: case FKEY_5: case FKEY_6: case FKEY_7: case FKEY_8: case FKEY_9:
@@ -213,8 +207,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   default:
       return true;
   }
+
   return true;
 }
+
+bool in_window_layer = false;
 
 uint32_t layer_state_set_user(uint32_t state) {
   uint8_t layer = biton32(state);
@@ -229,6 +226,18 @@ uint32_t layer_state_set_user(uint32_t state) {
           unregister_code(code);
       }
       fkey_number = 0;
+  }
+  if (layer_state_cmp(state, _Window) && !in_window_layer)
+  {
+      register_code(KC_F13);
+      unregister_code(KC_F13);
+      in_window_layer = true;
+  }
+  if (!layer_state_cmp(state, _Window) && in_window_layer)
+  {
+      register_code(KC_F14);
+      unregister_code(KC_F14);
+      in_window_layer = false;
   }
   return state;
 }
