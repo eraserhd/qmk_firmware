@@ -47,7 +47,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,_Z_LCtl_,_X_LAlt_,  KC_C  ,  KC_V  ,  KC_B  ,                        KC_N ,  KC_M  , KC_COMM,Dot_RAlt,Slsh_Ctl, KC_RSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                      MO(_Command), KC_ENT ,_Tab_Cmd,   Bspc_Cmd, KC_SPC , KC_ESC
+                                      TO(_Command), KC_ENT ,_Tab_Cmd,   Bspc_Cmd, KC_SPC , KC_ESC
                                       //`--------------------------'  `--------------------------'
 
     ),
@@ -110,7 +110,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 int RGB_current_mode;
 
-void matrix_init_user(void) {
+void matrix_init_user(void)
+{
     #ifdef RGBLIGHT_ENABLE
       RGB_current_mode = rgblight_config.mode;
     #endif
@@ -135,32 +136,50 @@ const char *read_keylogs(void);
 // void set_timelog(void);
 // const char *read_timelog(void);
 
-void matrix_scan_user(void) {
+void matrix_scan_user(void)
+{
    iota_gfx_task();
 }
 
-void matrix_render_user(struct CharacterMatrix *matrix) {
-  if (is_master) {
-    // If you want to change the display of OLED, you need to change here
-    matrix_write_ln(matrix, read_layer_state());
-    matrix_write_ln(matrix, read_keylog());
-    //matrix_write_ln(matrix, read_keylogs());
-    //matrix_write_ln(matrix, read_mode_icon(keymap_config.swap_lalt_lgui));
-    //matrix_write_ln(matrix, read_host_led_state());
-    //matrix_write_ln(matrix, read_timelog());
-  } else {
-    matrix_write(matrix, read_logo());
-  }
+char prompt[40] = ":";
+uint8_t prompt_offset = 1;
+
+void matrix_render_user(struct CharacterMatrix *matrix)
+{
+    if (is_master)
+    {
+        if (layer_state_is(_Command))
+        {
+            matrix_write_ln(matrix, prompt);
+        }
+        else
+        {
+            // If you want to change the display of OLED, you need to change here
+            matrix_write_ln(matrix, read_layer_state());
+            matrix_write_ln(matrix, read_keylog());
+            //matrix_write_ln(matrix, read_keylogs());
+            //matrix_write_ln(matrix, read_mode_icon(keymap_config.swap_lalt_lgui));
+            //matrix_write_ln(matrix, read_host_led_state());
+            //matrix_write_ln(matrix, read_timelog());
+        }
+    }
+    else
+    {
+        matrix_write(matrix, read_logo());
+    }
 }
 
-void matrix_update(struct CharacterMatrix *dest, const struct CharacterMatrix *source) {
-  if (memcmp(dest->display, source->display, sizeof(dest->display))) {
-    memcpy(dest->display, source->display, sizeof(dest->display));
-    dest->dirty = true;
-  }
+void matrix_update(struct CharacterMatrix *dest, const struct CharacterMatrix *source)
+{
+    if (memcmp(dest->display, source->display, sizeof(dest->display)))
+    {
+        memcpy(dest->display, source->display, sizeof(dest->display));
+        dest->dirty = true;
+    }
 }
 
-void iota_gfx_task_user(void) {
+void iota_gfx_task_user(void)
+{
   struct CharacterMatrix matrix;
   matrix_clear(&matrix);
   matrix_render_user(&matrix);
@@ -170,32 +189,79 @@ void iota_gfx_task_user(void) {
 
 bool in_window_layer = false;
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record)
+void run_command(void)
 {
-  if (record->event.pressed)
-  {
-#ifdef SSD1306OLED
-    set_keylog(keycode, record);
-#endif
-    // set_timelog();
-  }
-
-  switch (keycode)
-  {
-  /* Defeat Mac OS's defeat of caps lock. */
-  case KC_CAPSLOCK:
-      if (!record->event.pressed)
-          _delay_ms(50);
-      return true;
-  default:
-      return true;
-  }
-
-  return true;
+    if (!strcmp(prompt, ":sleep"))
+    {
+        register_code(KC_LSFT);
+        register_code(KC_LCTL);
+        register_code(KC_POWER);
+        unregister_code(KC_POWER);
+        unregister_code(KC_LCTL);
+        unregister_code(KC_LSFT);
+    }
 }
 
+void clear_command(void)
+{
+    prompt_offset = 1;
+    prompt[prompt_offset] = '\0';
+}
 
-uint32_t layer_state_set_user(uint32_t state) {
+bool process_record_user(uint16_t keycode, keyrecord_t *record)
+{
+    if (layer_state_is(_Command))
+    {
+        if (record->event.pressed)
+        {
+            char to_add = 0;
+            switch (keycode)
+            {
+            case KC_A ... KC_Z:
+                to_add = 'a' + (keycode - KC_A);
+                break;
+            case KC_ENT:
+                run_command();
+                /* fall through */
+            case KC_ESC:
+                clear_command();
+                layer_move(_Qwerty);
+                break;
+            }
+
+            if (to_add && prompt_offset < sizeof(prompt) - 1)
+            {
+                prompt[prompt_offset++] = to_add;
+                prompt[prompt_offset] = '\0';
+            }
+        }
+        return false;
+    }
+
+    if (record->event.pressed)
+    {
+#ifdef SSD1306OLED
+        set_keylog(keycode, record);
+#endif
+        // set_timelog();
+      }
+
+    switch (keycode)
+    {
+    /* Defeat Mac OS's defeat of caps lock. */
+    case KC_CAPSLOCK:
+        if (!record->event.pressed)
+            _delay_ms(50);
+        return true;
+    default:
+        return true;
+    }
+
+    return true;
+}
+
+uint32_t layer_state_set_user(uint32_t state)
+{
   if (layer_state_cmp(state, _Window) && !in_window_layer)
   {
       register_code(KC_F13);
