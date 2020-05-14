@@ -193,12 +193,7 @@ void run_command(void)
 {
     if (!strcmp(prompt, ":sleep"))
     {
-        register_code(KC_LSFT);
-        register_code(KC_LCTL);
-        register_code(KC_POWER);
-        unregister_code(KC_POWER);
-        unregister_code(KC_LCTL);
-        unregister_code(KC_LSFT);
+        tap_code16(LSFT(LCTL(KC_POWER)));
     }
 }
 
