@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PERMISSIVE_HOLD
 #define QMK_KEYS_PER_SCAN 4
 #define TAPPING_TERM 200
+
 //#define USE_MATRIX_I2C
 
 #define USB_MAX_POWER_CONSUMPTION 400
@@ -33,8 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MASTER_LEFT
 // #define MASTER_RIGHT
 #define EE_HANDS
-
-#define SSD1306OLED
 
 #define USE_SERIAL_PD2
 

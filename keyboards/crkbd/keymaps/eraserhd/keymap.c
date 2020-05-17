@@ -121,14 +121,49 @@ void matrix_init_user(void)
     #endif
 }
 
+char prompt[40] = ":";
+uint8_t prompt_offset = 1;
+
+#ifdef OLED_DRIVER_ENABLE
+oled_rotation_t oled_init_user(oled_rotation_t rotation)
+{
+    if (is_master)
+        return OLED_ROTATION_270;
+    return rotation;
+}
+
+const char *read_logo(void);
+const char *read_keylog(void);
+const char *read_layer_state(void);
+
+void oled_task_user(void)
+{
+    if (is_master)
+    {
+        switch (biton32(layer_state))
+        {
+        case _Qwerty:  oled_write_ln_P(PSTR("QWRTY"), false); break;
+        case _Symbol:  oled_write_ln_P(PSTR("SYMBL"), false); break;
+        case _Mouse:   oled_write_ln_P(PSTR("MOUSE"), false); break;
+        case _Number:  oled_write_ln_P(PSTR("NUMBR"), false); break;
+        case _Command: oled_write_ln_P(PSTR("COMMD"), false); break;
+        case _Window:  oled_write_ln_P(PSTR("WINDW"), false); break;
+        default:       oled_write_ln_P(PSTR(" ??? "), false); break;
+        }
+    }
+    else
+    {
+        oled_write(read_logo(), false);
+    }
+}
+#endif
+
 //SSD1306 OLED update loop, make sure to add #define SSD1306OLED in config.h
 #ifdef SSD1306OLED
 
 // When add source files to SRC in rules.mk, you can use functions.
-const char *read_layer_state(void);
 const char *read_logo(void);
 void set_keylog(uint16_t keycode, keyrecord_t *record);
-const char *read_keylog(void);
 const char *read_keylogs(void);
 
 // const char *read_mode_icon(bool swap);
@@ -140,9 +175,6 @@ void matrix_scan_user(void)
 {
    iota_gfx_task();
 }
-
-char prompt[40] = ":";
-uint8_t prompt_offset = 1;
 
 void matrix_render_user(struct CharacterMatrix *matrix)
 {
