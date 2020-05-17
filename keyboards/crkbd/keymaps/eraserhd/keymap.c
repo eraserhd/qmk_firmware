@@ -197,7 +197,7 @@ bool in_window_layer = false;
 
 void run_command(void)
 {
-    if (!strcmp(prompt, ">sleep"))
+    if (!strcmp(prompt+1, "sleep"))
     {
         tap_code16(LSFT(LCTL(KC_POWER)));
     }
