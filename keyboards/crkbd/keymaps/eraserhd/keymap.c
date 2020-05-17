@@ -117,7 +117,7 @@ void matrix_init_user(void)
     #endif
 }
 
-char prompt[40] = ":";
+char prompt[40] = ">";
 uint8_t prompt_offset = 1;
 char row_and_column[8] = "  x  ";
 
@@ -128,7 +128,6 @@ void set_keylog(uint16_t keycode, keyrecord_t *record)
 
 #ifdef OLED_DRIVER_ENABLE
 
-
 oled_rotation_t oled_init_user(oled_rotation_t rotation)
 {
     if (is_master)
@@ -136,7 +135,29 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation)
     return rotation;
 }
 
+void write_prompt_to_oled(void)
+{
+    uint8_t width = oled_max_chars();
+    uint8_t prompt_display_offset = 0;
+    bool seen_end = false;
+
+    if (prompt_offset > width)
+        prompt_display_offset = prompt_offset - width;
+
+    for (uint8_t i = 0; i < width; i++)
+    {
+        if (!seen_end && !prompt[prompt_display_offset + i])
+            seen_end = true;
+        oled_write_char(seen_end ? ' ' : prompt[prompt_display_offset + i], false);
+    }
+}
+
 const char *read_logo(void);
+
+void advance_line(void)
+{
+    oled_write_ln_P(PSTR("     "), false);
+}
 
 void oled_task_user(void)
 {
@@ -144,17 +165,26 @@ void oled_task_user(void)
     {
         switch (biton32(layer_state))
         {
+        case _Command:
+            write_prompt_to_oled();
+            break;
         case _Qwerty:  oled_write_ln_P(PSTR("QWRTY"), false); break;
         case _Symbol:  oled_write_ln_P(PSTR("SYMBL"), false); break;
         case _Mouse:   oled_write_ln_P(PSTR("MOUSE"), false); break;
         case _Number:  oled_write_ln_P(PSTR("NUMBR"), false); break;
-        case _Command: oled_write_ln_P(PSTR("COMMD"), false); break;
         case _Window:  oled_write_ln_P(PSTR("WINDW"), false); break;
         default:       oled_write_ln_P(PSTR(" ??? "), false); break;
         }
 
-        oled_write_ln_P(PSTR(""), false);
+        advance_line();
         oled_write_ln(row_and_column, false);
+        advance_line();
+
+        led_t led_state = host_keyboard_led_state();
+        if (led_state.caps_lock)
+            oled_write_ln_P(PSTR("CAPS"), false);
+        else
+            advance_line();
     }
     else
     {
@@ -167,7 +197,7 @@ bool in_window_layer = false;
 
 void run_command(void)
 {
-    if (!strcmp(prompt, ":sleep"))
+    if (!strcmp(prompt, ">sleep"))
     {
         tap_code16(LSFT(LCTL(KC_POWER)));
     }
