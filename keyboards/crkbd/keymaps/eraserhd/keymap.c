@@ -16,7 +16,8 @@ int RGB_current_mode;
 static uint32_t oled_timer = 0;
 #endif
 
-enum layers {
+enum layers
+{
     _Qwerty,
     _Symbol,
     _Mouse,
@@ -25,11 +26,13 @@ enum layers {
     _Window
 };
 
-enum custom_keycodes {
+enum custom_keycodes
+{
     FKEY_0 = SAFE_RANGE, // can always be here
 };
 
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
+{
 
 #define _CAP_Symb_  LT(_Symbol,KC_CAPSLOCK)
 #define _D_Num_     LT(_Number,KC_D)
@@ -115,9 +118,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void matrix_init_user(void)
 {
-    #ifdef RGBLIGHT_ENABLE
-      RGB_current_mode = rgblight_config.mode;
-    #endif
+#ifdef RGBLIGHT_ENABLE
+    RGB_current_mode = rgblight_config.mode;
+#endif
 }
 
 char prompt[40] = ">";
