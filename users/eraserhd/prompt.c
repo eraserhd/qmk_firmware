@@ -18,17 +18,31 @@ void run_command(void)
     }
 }
 
+const char PROGMEM mapping[] = {
+      0,   0,   0,   0, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+    'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2',
+    '3', '4', '5', '6', '7', '8', '9', '0',   0,   0,   0,   0, ' ', '-', '=', '[',
+    ']','\\', '#', ';','\'', '`', ',', '.', '/',   0,   0,   0,   0,   0,   0,   0,
+};
+
 bool prompt_key(uint16_t keycode, keyrecord_t* record)
 {
     if (!record->event.pressed)
         return false;
 
-    char to_add = 0;
+    uint8_t index = keycode & 0xFF;
+    if (index < sizeof(mapping)/sizeof(mapping[0]))
+    {
+        char to_add = pgm_read_byte_near(mapping + index);
+        if (to_add && prompt_offset < sizeof(prompt) - 1)
+        {
+            prompt[prompt_offset++] = to_add;
+            prompt[prompt_offset] = '\0';
+        }
+    }
+
     switch (keycode & 0xFF)
     {
-    case KC_A ... KC_Z:
-        to_add = 'a' + (keycode - KC_A);
-        break;
     case KC_BSPC:
         if (prompt_offset > 1)
             prompt[--prompt_offset] = '\0';
@@ -40,12 +54,6 @@ bool prompt_key(uint16_t keycode, keyrecord_t* record)
         clear_prompt_command();
         layer_move(0);
         break;
-    }
-
-    if (to_add && prompt_offset < sizeof(prompt) - 1)
-    {
-        prompt[prompt_offset++] = to_add;
-        prompt[prompt_offset] = '\0';
     }
 
     return false;
