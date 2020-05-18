@@ -19,20 +19,36 @@ void run_command(void)
 }
 
 const char PROGMEM mapping[] = {
-      0,   0,   0,   0, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-    'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2',
-    '3', '4', '5', '6', '7', '8', '9', '0',   0,   0,   0,   0, ' ', '-', '=', '[',
-    ']','\\', '#', ';','\'', '`', ',', '.', '/',   0,   0,   0,   0,   0,   0,   0,
+    // unshifted
+      0,   0,   0,   0, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', // 0x00
+    'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', // 0x10
+    '3', '4', '5', '6', '7', '8', '9', '0',   0,   0,   0,   0, ' ', '-', '=', '[', // 0x20
+    ']','\\', '#', ';','\'', '`', ',', '.', '/',   0,   0,   0,   0,   0,   0,   0, // 0x30
+
+    // shifted
+      0,   0,   0,   0, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', // 0x00
+    'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '!', '@', // 0x10
+    '#', '$', '%', '^', '&', '*', '(', ')',   0,   0,   0,   0, ' ', '_', '+', '{', // 0x20
+    '}', '|', '#', ':', '"', '~', '<', '>', '?',   0,   0,   0,   0,   0,   0,   0, // 0x30
 };
 
 bool prompt_key(uint16_t keycode, keyrecord_t* record)
 {
+    switch (keycode)
+    {
+    case KC_LSFT:
+    case KC_RSFT:
+        return true;
+    }
+
     if (!record->event.pressed)
         return false;
 
     uint8_t index = keycode & 0xFF;
     if (index < sizeof(mapping)/sizeof(mapping[0]))
     {
+        if (get_mods() & MOD_MASK_SHIFT)
+            index += 0x40;
         char to_add = pgm_read_byte_near(mapping + index);
         if (to_add && prompt_offset < sizeof(prompt) - 1)
         {
