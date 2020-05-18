@@ -1,0 +1,2 @@
+
+SRC += ./prompt.c

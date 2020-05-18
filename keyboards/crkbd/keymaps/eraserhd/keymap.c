@@ -3,6 +3,7 @@
 #include "action_layer.h"
 #include "pointing_device.h"
 #include "version.h"
+#include "prompt.h"
 
 extern uint8_t is_master;
 
@@ -179,12 +180,12 @@ void oled_task_user(void)
         case _Command:
             write_prompt_to_oled();
             break;
-        case _Qwerty:  oled_write_ln_P(PSTR("QWRTY"), false); break;
-        case _Symbol:  oled_write_ln_P(PSTR("SYMBL"), false); break;
-        case _Mouse:   oled_write_ln_P(PSTR("MOUSE"), false); break;
-        case _Number:  oled_write_ln_P(PSTR("NUMBR"), false); break;
-        case _Window:  oled_write_ln_P(PSTR("WINDW"), false); break;
-        default:       oled_write_ln_P(PSTR(" ??? "), false); break;
+        case _Qwerty:  oled_write_ln_P(PSTR("   A "), false); break;
+        case _Symbol:  oled_write_ln_P(PSTR("   ) "), false); break;
+        case _Mouse:   oled_write_ln_P(PSTR("   M "), false); break;
+        case _Number:  oled_write_ln_P(PSTR("   1 "), false); break;
+        case _Window:  oled_write_ln_P(PSTR("   W "), false); break;
+        default:       oled_write_ln_P(PSTR("   ? "), false); break;
         }
 
         advance_line();
