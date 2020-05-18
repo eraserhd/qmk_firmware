@@ -124,8 +124,6 @@ void matrix_init_user(void)
 #endif
 }
 
-char prompt[40] = ">";
-uint8_t prompt_offset = 1;
 char row_and_column[8] = "  x  ";
 
 void set_keylog(uint16_t keycode, keyrecord_t *record)
@@ -140,23 +138,6 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation)
     if (is_master)
         return OLED_ROTATION_270;
     return rotation;
-}
-
-void write_prompt_to_oled(void)
-{
-    uint8_t width = oled_max_chars();
-    uint8_t prompt_display_offset = 0;
-    bool seen_end = false;
-
-    if (prompt_offset > width)
-        prompt_display_offset = prompt_offset - width;
-
-    for (uint8_t i = 0; i < width; i++)
-    {
-        if (!seen_end && !prompt[prompt_display_offset + i])
-            seen_end = true;
-        oled_write_char(seen_end ? ' ' : prompt[prompt_display_offset + i], false);
-    }
 }
 
 const char *read_logo(void);
@@ -207,20 +188,6 @@ void oled_task_user(void)
 
 bool in_window_layer = false;
 
-void run_command(void)
-{
-    if (!strcmp(prompt+1, "sleep"))
-    {
-        tap_code16(LSFT(LCTL(KC_POWER)));
-    }
-}
-
-void clear_command(void)
-{
-    prompt_offset = 1;
-    prompt[prompt_offset] = '\0';
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record)
 {
 #ifdef OLED_DRIVER_ENABLE
@@ -229,32 +196,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
 #endif
 
     if (layer_state_is(_Command))
-    {
-        if (record->event.pressed)
-        {
-            char to_add = 0;
-            switch (keycode)
-            {
-            case KC_A ... KC_Z:
-                to_add = 'a' + (keycode - KC_A);
-                break;
-            case KC_ENT:
-                run_command();
-                /* fall through */
-            case KC_ESC:
-                clear_command();
-                layer_move(_Qwerty);
-                break;
-            }
-
-            if (to_add && prompt_offset < sizeof(prompt) - 1)
-            {
-                prompt[prompt_offset++] = to_add;
-                prompt[prompt_offset] = '\0';
-            }
-        }
-        return false;
-    }
+        return prompt_key(keycode, record);
 
     if (record->event.pressed)
         set_keylog(keycode, record);
