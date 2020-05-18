@@ -47,6 +47,7 @@ bool prompt_key(uint16_t keycode, keyrecord_t* record)
     return false;
 }
 
+#ifdef OLED_DRIVER_ENABLE
 void write_prompt_to_oled(void)
 {
     uint8_t width = oled_max_chars();
@@ -63,4 +64,5 @@ void write_prompt_to_oled(void)
         oled_write_char(seen_end ? ' ' : prompt[prompt_display_offset + i], false);
     }
 }
+#endif
 
