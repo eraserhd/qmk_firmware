@@ -24,10 +24,14 @@ bool prompt_key(uint16_t keycode, keyrecord_t* record)
         return false;
 
     char to_add = 0;
-    switch (keycode)
+    switch (keycode & 0xFF)
     {
     case KC_A ... KC_Z:
         to_add = 'a' + (keycode - KC_A);
+        break;
+    case KC_BSPC:
+        if (prompt_offset > 1)
+            prompt[--prompt_offset] = '\0';
         break;
     case KC_ENT:
         run_command();
