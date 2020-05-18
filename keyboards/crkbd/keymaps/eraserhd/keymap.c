@@ -4,12 +4,17 @@
 #include "pointing_device.h"
 #include "version.h"
 
+extern uint8_t is_master;
+
 #ifdef RGBLIGHT_ENABLE
 //Following line allows macro to read current RGB settings
 extern rgblight_config_t rgblight_config;
+int RGB_current_mode;
 #endif
 
-extern uint8_t is_master;
+#ifdef OLED_DRIVER_ENABLE
+static uint32_t oled_timer = 0;
+#endif
 
 enum layers {
     _Qwerty,
@@ -108,8 +113,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
-int RGB_current_mode;
-
 void matrix_init_user(void)
 {
     #ifdef RGBLIGHT_ENABLE
@@ -161,6 +164,11 @@ void advance_line(void)
 
 void oled_task_user(void)
 {
+    if (timer_elapsed32(oled_timer) > 10000)
+    {
+        oled_off();
+        return;
+    }
     if (is_master)
     {
         switch (biton32(layer_state))
@@ -211,6 +219,11 @@ void clear_command(void)
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record)
 {
+#ifdef OLED_DRIVER_ENABLE
+    if (record->event.pressed)
+        oled_timer = timer_read32();
+#endif
+
     if (layer_state_is(_Command))
     {
         if (record->event.pressed)
