@@ -12,7 +12,11 @@ void clear_prompt_command(void)
 
 void run_command(void)
 {
-    if (!strcmp_P(prompt+1, PSTR("sleep")))
+    if (!strcmp_P(prompt+1, PSTR("left")))
+        tap_code16(MAGIC_EE_HANDS_LEFT);
+    else if (!strcmp_P(prompt+1, PSTR("right")))
+        tap_code16(MAGIC_EE_HANDS_RIGHT);
+    else if (!strcmp_P(prompt+1, PSTR("sleep")))
         tap_code16(LSFT(LCTL(KC_POWER)));
 #ifdef UNICODE_ENABLE
     else if (!strcmp_P(prompt+1, PSTR("unicode mac")))
