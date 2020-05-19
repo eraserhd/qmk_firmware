@@ -12,10 +12,20 @@ void clear_prompt_command(void)
 
 void run_command(void)
 {
-    if (!strcmp(prompt+1, "sleep"))
-    {
+    if (!strcmp_P(prompt+1, PSTR("sleep")))
         tap_code16(LSFT(LCTL(KC_POWER)));
-    }
+#ifdef UNICODE_ENABLE
+    else if (!strcmp_P(prompt+1, PSTR("unicode mac")))
+        tap_code16(UNICODE_MODE_MAC);
+    else if (!strcmp_P(prompt+1, PSTR("unicode linux")))
+        tap_code16(UNICODE_MODE_LNX);
+    else if (!strcmp_P(prompt+1, PSTR("unicode bsd")))
+        tap_code16(UNICODE_MODE_BSD);
+    else if (!strcmp_P(prompt+1, PSTR("unicode windows")))
+        tap_code16(UNICODE_MODE_WIN);
+    else if (!strcmp_P(prompt+1, PSTR("unicode wincompose")))
+        tap_code16(UNICODE_MODE_WINC);
+#endif
 }
 
 const char mapping[] PROGMEM = {
