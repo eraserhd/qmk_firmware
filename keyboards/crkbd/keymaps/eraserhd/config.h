@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#define LEADER_TIMEOUT 800
 #define PERMISSIVE_HOLD
+#define IGNORE_MOD_TAP_INTERRUPT
 #define QMK_KEYS_PER_SCAN 4
 #define TAPPING_TERM 200
 
