@@ -4,6 +4,8 @@ BOOTMAGIC_ENABLE = no
 EXTRAKEY_ENABLE = yes
 OLED_DRIVER_ENABLE = yes
 
+EXTRAFLAGS += -flto
+
 # If you want to change the display of OLED, you need to change here
 SRC +=  ./lib/glcdfont.c \
         ./lib/rgb_state_reader.c \
