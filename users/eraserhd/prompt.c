@@ -32,7 +32,8 @@ void run_command(void)
 #endif
 }
 
-const char mapping[] PROGMEM = {
+const char mapping[] PROGMEM =
+{
     // unshifted
       0,   0,   0,   0, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', // 0x00
     'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', // 0x10
