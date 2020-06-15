@@ -18,6 +18,55 @@ void run_command(void)
         tap_code16(MAGIC_EE_HANDS_RIGHT);
     else if (!strcmp_P(prompt+1, PSTR("sleep")))
         tap_code16(LSFT(LCTL(KC_POWER)));
+#ifdef RGBLIGHT_ENABLE
+    else if (!strcmp_P(prompt+1, PSTR("led off")))
+        rgblight_disable();
+    else if (!strcmp_P(prompt+1, PSTR("led plain")))
+    {
+        rgblight_enable();
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+    }
+    else if (!strcmp_P(prompt+1, PSTR("led breathe")))
+    {
+        rgblight_enable();
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING);
+    }
+    else if (!strcmp_P(prompt+1, PSTR("led rainbow")))
+    {
+        rgblight_enable();
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_RAINBOW_MOOD);
+    }
+    else if (!strcmp_P(prompt+1, PSTR("led swirl")))
+    {
+        rgblight_enable();
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_RAINBOW_SWIRL);
+    }
+    else if (!strcmp_P(prompt+1, PSTR("led snake")))
+    {
+        rgblight_enable();
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_SNAKE);
+    }
+    else if (!strcmp_P(prompt+1, PSTR("led knight")))
+    {
+        rgblight_enable();
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_KNIGHT);
+    }
+    else if (!strcmp_P(prompt+1, PSTR("led xmas")))
+    {
+        rgblight_enable();
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_CHRISTMAS);
+    }
+    else if (!strcmp_P(prompt+1, PSTR("led gradient")))
+    {
+        rgblight_enable();
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_GRADIENT);
+    }
+    else if (!strcmp_P(prompt+1, PSTR("led test")))
+    {
+        rgblight_enable();
+        rgblight_mode(RGBLIGHT_MODE_RGB_TEST);
+    }
+#endif
 #ifdef UNICODE_ENABLE
     else if (!strcmp_P(prompt+1, PSTR("unicode mac")))
         tap_code16(UNICODE_MODE_MAC);

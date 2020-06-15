@@ -119,8 +119,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
 
 void matrix_init_user(void)
 {
-    rgblight_enable();
-    rgblight_setrgb(255,0,0);
 #ifdef RGBLIGHT_ENABLE
     RGB_current_mode = rgblight_config.mode;
 #endif
