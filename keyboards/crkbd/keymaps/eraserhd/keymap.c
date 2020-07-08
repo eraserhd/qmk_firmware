@@ -221,17 +221,7 @@ uint32_t layer_state_set_user(uint32_t state)
 {
   if (layer_state_cmp(state, _Window) && !in_window_layer)
   {
-      register_code(KC_LGUI);
-      register_code(KC_LSHIFT);
-      register_code(KC_LALT);
-      register_code(KC_LCTRL);
-      _delay_ms(15);
-      register_code(KC_K);
-      unregister_code(KC_K);
-      unregister_code(KC_LGUI);
-      unregister_code(KC_LSHIFT);
-      unregister_code(KC_LALT);
-      unregister_code(KC_LCTRL);
+      tap_code16(HYPR(KC_K));
       in_window_layer = true;
   }
   if (!layer_state_cmp(state, _Window) && in_window_layer)
