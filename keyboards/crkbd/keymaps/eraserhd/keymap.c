@@ -29,8 +29,7 @@ enum layers
 
 enum custom_keycodes
 {
-    _LMenu_ = SAFE_RANGE, // can always be here
-    _RMenu_
+    _None_ = SAFE_RANGE, // can always be here
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
@@ -48,6 +47,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
 #define Bspc_Cmd    LGUI_T(KC_BSPC)
 #define _Q_Mouse_   LT(_Mouse,KC_Q)
 #define _W_Win_     LT(_Window,KC_W)
+#define _LMenu_     RCTL(KC_F2)
+#define _RMenu_     RCTL(KC_F8)
 
     [_Qwerty] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
@@ -189,15 +190,6 @@ void oled_task_user(void)
 
 bool in_window_layer = false;
 
-static void activate_menu(uint8_t k)
-{
-    register_code(KC_RCTRL);
-    _delay_ms(15);
-    register_code(k);
-    unregister_code(k);
-    unregister_code(KC_RCTRL);
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record)
 {
 #ifdef OLED_DRIVER_ENABLE
@@ -217,14 +209,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
     case KC_CAPSLOCK:
         if (!record->event.pressed)
             _delay_ms(50);
-        return true;
-    case _LMenu_:
-        if (record->event.pressed)
-            activate_menu(KC_F2);
-        return true;
-    case _RMenu_:
-        if (record->event.pressed)
-            activate_menu(KC_F8);
         return true;
     default:
         return true;
