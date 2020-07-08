@@ -29,7 +29,8 @@ enum layers
 
 enum custom_keycodes
 {
-    FKEY_0 = SAFE_RANGE, // can always be here
+    _LMenu_ = SAFE_RANGE, // can always be here
+    _RMenu_
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
@@ -62,11 +63,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
     ),
     [_Symbol] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      _______, KC_EXLM, KC_TILD, KC_LCBR, KC_RCBR, KC_AMPR,                      KC_HOME, _______, KC_INS , KC_END , KC_PGUP, _______,
+      _______, KC_EXLM, KC_TILD, KC_LCBR, KC_RCBR, KC_AMPR,                      _LMenu_, _______, _______, _RMenu_, KC_PGUP, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, KC_HASH, KC_GRV , KC_LPRN, KC_RPRN, KC_DLR ,                      KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT, _______, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, KC_PERC, KC_CIRC, KC_LBRC, KC_RBRC, KC_AT  ,                      KC_DEL , KC_PGDN, KC_PGUP, _______, KC_PGDN, _______,
+      _______, KC_PERC, KC_CIRC, KC_LBRC, KC_RBRC, KC_AT  ,                      KC_DEL , KC_END , KC_HOME, KC_INS , KC_PGDN, _______,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           _______, KC_EQL , _______,    _______, _______, _______
                                       //`--------------------------'  `--------------------------'
@@ -207,6 +208,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
     case KC_CAPSLOCK:
         if (!record->event.pressed)
             _delay_ms(50);
+        return true;
+    case _LMenu_:
+        if (record->event.pressed)
+        {
+            register_code(KC_RCTRL);
+            _delay_ms(15);
+            register_code(KC_F2);
+            unregister_code(KC_F2);
+            unregister_code(KC_RCTRL);
+        }
+        return true;
+    case _RMenu_:
+        if (record->event.pressed)
+        {
+            register_code(KC_LCTRL);
+            _delay_ms(15);
+            register_code(KC_F8);
+            unregister_code(KC_F8);
+            unregister_code(KC_LCTRL);
+        }
         return true;
     default:
         return true;
