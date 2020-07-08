@@ -189,6 +189,15 @@ void oled_task_user(void)
 
 bool in_window_layer = false;
 
+static void activate_menu(uint8_t k)
+{
+    register_code(KC_RCTRL);
+    _delay_ms(15);
+    register_code(k);
+    unregister_code(k);
+    unregister_code(KC_RCTRL);
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record)
 {
 #ifdef OLED_DRIVER_ENABLE
@@ -211,23 +220,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
         return true;
     case _LMenu_:
         if (record->event.pressed)
-        {
-            register_code(KC_RCTRL);
-            _delay_ms(15);
-            register_code(KC_F2);
-            unregister_code(KC_F2);
-            unregister_code(KC_RCTRL);
-        }
+            activate_menu(KC_F2);
         return true;
     case _RMenu_:
         if (record->event.pressed)
-        {
-            register_code(KC_LCTRL);
-            _delay_ms(15);
-            register_code(KC_F8);
-            unregister_code(KC_F8);
-            unregister_code(KC_LCTRL);
-        }
+            activate_menu(KC_F8);
         return true;
     default:
         return true;
