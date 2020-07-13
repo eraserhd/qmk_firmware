@@ -19,12 +19,13 @@ static uint16_t look_up_symbol(const char* name)
     // f1 through f24
     if (name[0] == 'f')
     {
+        uint8_t n = 0;
         if (name[1] >= '1' && name[1] <= '9' && name[2] == '\0')
-            return KC_F1 + (name[1] - '1');
-        if (name[1] == '1' && name[2] >= '0' && name[2] <= '9' && name[3] == '\0')
-            return KC_F10 + (name[1] - '0');
-        if (name[1] == '2' && name[2] >= '0' && name[2] <= '4' && name[3] == '\0')
-            return KC_F20 + (name[1] - '0');
+            n = name[1] - '0';
+        else if (name[1] >= '1' && name[1] <= '2' && name[2] >= '0' && name[2] <= '9' && name[3] == '\0')
+            n = 10 * (name[1] - '0') + (name[2] - '0');
+        if (n > 12) return KC_F13 + (n - 13);
+        if (n > 0)  return KC_F1 + (n - 1);
     }
 
     if (!strcmp_P(name, PSTR("left")))  return MAGIC_EE_HANDS_LEFT;
