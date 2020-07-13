@@ -16,10 +16,17 @@ static void clear_prompt_command(void)
 
 static uint16_t look_up_symbol(const char* name)
 {
-    if (name[0] == 'f' && name[1] >= '1' && name[1] <= '9' && name[2] == '\0')
-        return KC_F1 + (name[1] - '1');
-    if (name[0] == 'f' && name[1] == '1' && name[2] >= '0' && name[2] <= '9' && name[3] == '\0')
-        return KC_F10 + (name[1] - '0');
+    // f1 through f24
+    if (name[0] == 'f')
+    {
+        if (name[1] >= '1' && name[1] <= '9' && name[2] == '\0')
+            return KC_F1 + (name[1] - '1');
+        if (name[1] == '1' && name[2] >= '0' && name[2] <= '9' && name[3] == '\0')
+            return KC_F10 + (name[1] - '0');
+        if (name[1] == '2' && name[2] >= '0' && name[2] <= '4' && name[3] == '\0')
+            return KC_F20 + (name[1] - '0');
+    }
+
     if (!strcmp_P(name, PSTR("left")))  return MAGIC_EE_HANDS_LEFT;
     if (!strcmp_P(name, PSTR("right"))) return MAGIC_EE_HANDS_RIGHT;
     if (!strcmp_P(name, PSTR("sleep"))) return LSFT(LCTL(KC_POWER));
