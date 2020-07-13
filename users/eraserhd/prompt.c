@@ -3,9 +3,10 @@
 #include "prompt.h"
 #include "report.h"
 
-
-char prompt[40] = ">";
-uint8_t prompt_offset = 1;
+static host_driver_t* original_driver = NULL;
+static report_keyboard_t last_report = {};
+static char prompt[40] = ">";
+static uint8_t prompt_offset = 1;
 
 void clear_prompt_command(void)
 {
@@ -118,9 +119,6 @@ void write_prompt_to_oled(void)
 }
 #endif
 
-static host_driver_t* original_driver = NULL;
-static report_keyboard_t last_report = {};
-
 static uint8_t keyboard_leds(void)
 {
     return original_driver->keyboard_leds();
@@ -136,18 +134,6 @@ static bool in_last_report(uint8_t key)
 
 static void send_keyboard(report_keyboard_t *report)
 {
-    bool shift = false;
-    for (uint8_t i = 0; i < KEYBOARD_REPORT_KEYS; i++)
-    {
-        switch (report->keys[i])
-        {
-        case KC_LSHIFT:
-        case KC_RSHIFT:
-            shift = true;
-            break;
-        }
-    }
-
     for (uint8_t i = 0; i < KEYBOARD_REPORT_KEYS; i++)
     {
         if (in_last_report(report->keys[i]))
@@ -162,7 +148,7 @@ static void send_keyboard(report_keyboard_t *report)
         }
 
         uint8_t index = report->keys[i];
-        if (shift)
+        if (report->mods & ((1<<1)|(1<<5)))
             index += 0x40;
         if (index >= sizeof(mapping)/sizeof(mapping[0]))
             continue;
@@ -230,6 +216,7 @@ void leave_prompt(void)
         return;
     host_set_driver(original_driver);
     original_driver = NULL;
+    memset(&last_report, 0, sizeof(report_keyboard_t));
 }
 
 bool in_prompt(void)
