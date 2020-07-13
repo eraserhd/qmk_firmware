@@ -1,5 +1,8 @@
 #include QMK_KEYBOARD_H
+#include "host.h"
 #include "prompt.h"
+#include "report.h"
+
 
 char prompt[40] = ">";
 uint8_t prompt_offset = 1;
@@ -96,49 +99,6 @@ const char mapping[] PROGMEM =
     '}', '|', '#', ':', '"', '~', '<', '>', '?',   0,   0,   0,   0,   0,   0,   0, // 0x30
 };
 
-bool prompt_key(uint16_t keycode, keyrecord_t* record)
-{
-    switch (keycode)
-    {
-    case KC_LSFT:
-    case KC_RSFT:
-        return true;
-    }
-
-    if (!record->event.pressed)
-        return false;
-
-    uint8_t index = keycode & 0xFF;
-    if (index < sizeof(mapping)/sizeof(mapping[0]))
-    {
-        if (get_mods() & MOD_MASK_SHIFT)
-            index += 0x40;
-        char to_add = pgm_read_byte_near(mapping + index);
-        if (to_add && prompt_offset < sizeof(prompt) - 1)
-        {
-            prompt[prompt_offset++] = to_add;
-            prompt[prompt_offset] = '\0';
-        }
-    }
-
-    switch (keycode & 0xFF)
-    {
-    case KC_BSPC:
-        if (prompt_offset > 1)
-            prompt[--prompt_offset] = '\0';
-        break;
-    case KC_ENT:
-        run_command();
-        /* fall through */
-    case KC_ESC:
-        clear_prompt_command();
-        layer_move(0);
-        break;
-    }
-
-    return false;
-}
-
 #ifdef OLED_DRIVER_ENABLE
 void write_prompt_to_oled(void)
 {
@@ -158,3 +118,121 @@ void write_prompt_to_oled(void)
 }
 #endif
 
+static host_driver_t* original_driver = NULL;
+static report_keyboard_t last_report = {};
+
+static uint8_t keyboard_leds(void)
+{
+    return original_driver->keyboard_leds();
+}
+
+static bool in_last_report(uint8_t key)
+{
+    for (uint8_t i = 0; i < KEYBOARD_REPORT_KEYS; i++)
+        if (last_report.keys[i] == key)
+            return true;
+    return false;
+}
+
+static void send_keyboard(report_keyboard_t *report)
+{
+    bool shift = false;
+    for (uint8_t i = 0; i < KEYBOARD_REPORT_KEYS; i++)
+    {
+        switch (report->keys[i])
+        {
+        case KC_LSHIFT:
+        case KC_RSHIFT:
+            shift = true;
+            break;
+        }
+    }
+
+    for (uint8_t i = 0; i < KEYBOARD_REPORT_KEYS; i++)
+    {
+        if (in_last_report(report->keys[i]))
+            continue;
+        switch (report->keys[i])
+        {
+        case KC_LSHIFT:
+        case KC_RSHIFT:
+            continue;
+        default:
+            break;
+        }
+
+        uint8_t index = report->keys[i];
+        if (shift)
+            index += 0x40;
+        if (index >= sizeof(mapping)/sizeof(mapping[0]))
+            continue;
+
+        char to_add = pgm_read_byte_near(mapping + index);
+        if (to_add && prompt_offset < sizeof(prompt) - 1)
+        {
+            prompt[prompt_offset++] = to_add;
+            prompt[prompt_offset] = '\0';
+            continue;
+        }
+
+        switch (report->keys[i])
+        {
+        case KC_BSPC:
+            if (prompt_offset > 1)
+                prompt[--prompt_offset] = '\0';
+            break;
+        case KC_ENT:
+            run_command();
+            /* fall through */
+        case KC_ESC:
+            clear_prompt_command();
+            leave_prompt();
+            break;
+        }
+    }
+
+    memcpy(&last_report, report, sizeof(report_keyboard_t));
+}
+
+static void send_mouse(report_mouse_t *mouse)
+{
+}
+
+static void send_system(uint16_t code)
+{
+}
+
+static void send_consumer(uint16_t code)
+{
+}
+
+static host_driver_t prompt_driver =
+{
+    .keyboard_leds = keyboard_leds,
+    .send_keyboard = send_keyboard,
+    .send_mouse    = send_mouse,
+    .send_system   = send_system,
+    .send_consumer = send_consumer,
+};
+
+
+void enter_prompt(void)
+{
+    if (original_driver)
+        return;
+    original_driver = host_get_driver();
+    host_set_driver(&prompt_driver);
+}
+
+void leave_prompt(void)
+{
+    if (!original_driver)
+        return;
+    host_set_driver(original_driver);
+    original_driver = NULL;
+}
+
+bool in_prompt(void)
+{
+    return original_driver != NULL;
+}

@@ -23,13 +23,12 @@ enum layers
     _Symbol,
     _Mouse,
     _Number,
-    _Command,
     _Window
 };
 
 enum custom_keycodes
 {
-    _None_ = SAFE_RANGE, // can always be here
+    _Prompt_ = SAFE_RANGE, // can always be here
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
@@ -58,7 +57,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,_Z_LCtl_,_X_LAlt_,  KC_C  ,  KC_V  ,  KC_B  ,                        KC_N ,  KC_M  , KC_COMM,Dot_RAlt,Slsh_Ctl, KC_RSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                      TO(_Command), KC_ENT ,_Tab_Cmd,   Bspc_Cmd, KC_SPC , KC_ESC
+                                         _Prompt_, KC_ENT ,_Tab_Cmd,   Bspc_Cmd, KC_SPC , KC_ESC
                                       //`--------------------------'  `--------------------------'
 
     ),
@@ -93,17 +92,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
       _______, _______, _______,   KC_C , _______,  KC_B  ,                      KC_EQL ,  KC_1  ,  KC_2  ,  KC_3  , KC_SLSH, _______,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           _______, _______, _______,    _______, _______,  KC_0
-                                      //`--------------------------'  `--------------------------'
-    ),
-    [_Command] = LAYOUT(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          _______, _______, _______,    _______, _______, _______
                                       //`--------------------------'  `--------------------------'
     ),
     [_Window] = LAYOUT(
@@ -158,17 +146,19 @@ void oled_task_user(void)
     }
     if (is_master)
     {
-        switch (biton32(layer_state))
-        {
-        case _Command:
+        if (in_prompt())
             write_prompt_to_oled();
-            break;
-        case _Qwerty:  oled_write_ln_P(PSTR("   A "), false); break;
-        case _Symbol:  oled_write_ln_P(PSTR("   ) "), false); break;
-        case _Mouse:   oled_write_ln_P(PSTR("   M "), false); break;
-        case _Number:  oled_write_ln_P(PSTR("   1 "), false); break;
-        case _Window:  oled_write_ln_P(PSTR("   W "), false); break;
-        default:       oled_write_ln_P(PSTR("   ? "), false); break;
+        else
+        {
+            switch (biton32(layer_state))
+            {
+            case _Qwerty:  oled_write_ln_P(PSTR("   A "), false); break;
+            case _Symbol:  oled_write_ln_P(PSTR("   ) "), false); break;
+            case _Mouse:   oled_write_ln_P(PSTR("   M "), false); break;
+            case _Number:  oled_write_ln_P(PSTR("   1 "), false); break;
+            case _Window:  oled_write_ln_P(PSTR("   W "), false); break;
+            default:       oled_write_ln_P(PSTR("   ? "), false); break;
+            }
         }
 
         advance_line();
@@ -197,9 +187,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
         oled_timer = timer_read32();
 #endif
 
-    if (layer_state_is(_Command))
-        return prompt_key(keycode, record);
-
     if (record->event.pressed)
         set_keylog(keycode, record);
 
@@ -210,6 +197,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
         if (!record->event.pressed)
             _delay_ms(50);
         return true;
+    case _Prompt_:
+        enter_prompt();
+        return false;
     default:
         return true;
     }
