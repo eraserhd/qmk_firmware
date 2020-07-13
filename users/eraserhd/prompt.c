@@ -8,13 +8,13 @@ static report_keyboard_t last_report = {};
 static char prompt[40] = ">";
 static uint8_t prompt_offset = 1;
 
-void clear_prompt_command(void)
+static void clear_prompt_command(void)
 {
     prompt_offset = 1;
     prompt[prompt_offset] = '\0';
 }
 
-void run_command(void)
+static void run_command(void)
 {
     if (!strcmp_P(prompt+1, PSTR("left")))
         tap_code16(MAGIC_EE_HANDS_LEFT);
@@ -85,7 +85,7 @@ void run_command(void)
 #endif
 }
 
-const char mapping[] PROGMEM =
+static const char mapping[] PROGMEM =
 {
     // unshifted
       0,   0,   0,   0, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', // 0x00
