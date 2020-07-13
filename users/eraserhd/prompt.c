@@ -168,11 +168,14 @@ static void send_keyboard(report_keyboard_t *report)
                 prompt[--prompt_offset] = '\0';
             break;
         case KC_ENT:
+            leave_prompt();
             run_command();
+            clear_prompt_command();
+            break;
             /* fall through */
         case KC_ESC:
-            clear_prompt_command();
             leave_prompt();
+            clear_prompt_command();
             break;
         }
     }
