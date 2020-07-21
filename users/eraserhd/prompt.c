@@ -31,13 +31,13 @@ static uint16_t look_up_symbol(const char* name)
     if (!strcmp_P(name, PSTR("left")))  return MAGIC_EE_HANDS_LEFT;
     if (!strcmp_P(name, PSTR("right"))) return MAGIC_EE_HANDS_RIGHT;
     if (!strcmp_P(name, PSTR("sleep"))) return LSFT(LCTL(KC_POWER));
-    return KC_NO;
+    return KC_UNDEFINED;
 }
 
 static void run_command(void)
 {
     uint16_t value = look_up_symbol(prompt+1);
-    if (value != KC_NO)
+    if (value != KC_UNDEFINED)
         tap_code16(value);
 #ifdef RGBLIGHT_ENABLE
     else if (!strcmp_P(prompt+1, PSTR("led off")))
