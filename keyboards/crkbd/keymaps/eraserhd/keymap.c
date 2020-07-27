@@ -46,8 +46,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
 #define Bspc_Cmd    LGUI_T(KC_BSPC)
 #define _Q_Mouse_   LT(_Mouse,KC_Q)
 #define _W_Win_     LT(_Window,KC_W)
-#define _LMenu_     RCTL(KC_F2)
-#define _RMenu_     RCTL(KC_F8)
+#define _LMenu_     LCTL(KC_F2)
+#define _RMenu_     LCTL(KC_F8)
 
     [_Qwerty] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
