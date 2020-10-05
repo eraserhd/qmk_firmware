@@ -23,7 +23,6 @@ enum layers
     _Symbol,
     _Mouse,
     _Number,
-    _Window
 };
 
 enum custom_keycodes
@@ -46,12 +45,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
 #define Slsh_Ctl    RCTL_T(KC_SLSH)
 #define Bspc_Cmd    LGUI_T(KC_BSPC)
 #define _Q_Mouse_   LT(_Mouse,KC_Q)
-#define _W_Win_     LT(_Window,KC_W)
 #define _RMenu_     LCTL(KC_F8)
 
     [_Qwerty] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      KC_MINS,_Q_Mouse_,_W_Win_,  KC_E  ,  KC_R  ,  KC_T  ,                        KC_Y ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  , KC_BSLS,
+      KC_MINS,_Q_Mouse_, KC_W  ,  KC_E  ,  KC_R  ,  KC_T  ,                        KC_Y ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  , KC_BSLS,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
    _CAP_Symb_,  KC_A  ,  KC_S  ,_D_Num_ ,  KC_F  ,  KC_G  ,                        KC_H ,  KC_J  ,  KC_K  ,  KC_L  , KC_SCLN ,_Qu_Symb_,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -92,17 +90,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
       _______, _______, _______,   KC_C , _______,  KC_B  ,                      KC_EQL ,  KC_1  ,  KC_2  ,  KC_3  , KC_SLSH, _______,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           _______, _______, _______,    _______, _______,  KC_0
-                                      //`--------------------------'  `--------------------------'
-    ),
-    [_Window] = LAYOUT(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          _______, _______, _______,    _______, _______, _______
                                       //`--------------------------'  `--------------------------'
     ),
 };
@@ -156,7 +143,6 @@ void oled_task_user(void)
             case _Symbol:  oled_write_ln_P(PSTR("   ) "), false); break;
             case _Mouse:   oled_write_ln_P(PSTR("   M "), false); break;
             case _Number:  oled_write_ln_P(PSTR("   1 "), false); break;
-            case _Window:  oled_write_ln_P(PSTR("   W "), false); break;
             default:       oled_write_ln_P(PSTR("   ? "), false); break;
             }
         }
@@ -177,8 +163,6 @@ void oled_task_user(void)
     }
 }
 #endif
-
-bool in_window_layer = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record)
 {
@@ -212,19 +196,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
     }
 
     return true;
-}
-
-uint32_t layer_state_set_user(uint32_t state)
-{
-  if (layer_state_cmp(state, _Window) && !in_window_layer)
-  {
-      tap_code16(HYPR(KC_K));
-      in_window_layer = true;
-  }
-  if (!layer_state_cmp(state, _Window) && in_window_layer)
-  {
-      tap_code(KC_ESCAPE);
-      in_window_layer = false;
-  }
-  return state;
 }
