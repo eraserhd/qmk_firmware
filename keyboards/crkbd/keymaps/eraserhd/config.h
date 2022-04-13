@@ -49,3 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #define RGBLIGHT_SAT_STEP 17
     #define RGBLIGHT_VAL_STEP 17
 #endif
+
+#define ANALOG_JOYSTICK_X_AXIS_PIN B4
+#define ANALOG_JOYSTICK_Y_AXIS_PIN B5
+#define ANALOG_JOYSTICK_SPEED_REGULATOR 3
