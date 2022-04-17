@@ -1,5 +1,5 @@
 POINTING_DEVICE_ENABLE = yes
-POINTING_DEVICE_DRIVER = analog_joystick
+POINTING_DEVICE_DRIVER = custom
 UNICODE_ENABLE = yes
 BOOTMAGIC_ENABLE = no
 EXTRAKEY_ENABLE = yes
@@ -9,4 +9,4 @@ RGBLIGHT_ENABLE = no
 LTO_ENABLE = yes
 
 
-SRC += ./lib/logo_reader.c
+SRC += analog.c ./lib/logo_reader.c

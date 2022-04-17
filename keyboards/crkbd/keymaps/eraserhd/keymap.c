@@ -4,6 +4,7 @@
 #include "pointing_device.h"
 #include "version.h"
 #include "prompt.h"
+#include "analog.h"
 
 #ifdef RGBLIGHT_ENABLE
 //Following line allows macro to read current RGB settings
@@ -119,6 +120,17 @@ void advance_line(void)
     oled_write_ln_P(PSTR("     "), false);
 }
 
+#define X_MIN    70
+#define X_ORIGIN 498
+#define X_MAX    793
+
+#define Y_MIN    135
+#define Y_ORIGIN 514
+#define Y_MAX    855
+
+int16_t joystickX;
+int16_t joystickY;
+
 bool oled_task_user(void)
 {
     if (is_keyboard_master())
@@ -146,6 +158,12 @@ bool oled_task_user(void)
             oled_write_ln_P(PSTR("CAPS"), false);
         else
             advance_line();
+
+        char buf[7];
+        snprintf(buf, 6, " %d", joystickX);
+        oled_write_ln(buf, false);
+        snprintf(buf, 6, " %d", joystickY);
+        oled_write_ln(buf, false);
     }
     else
     {
@@ -167,6 +185,45 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report)
         mouse_report.y = 0;
     }
     return mouse_report;
+}
+
+float joystick_percent(int16_t value, int16_t min, int16_t center, int16_t max)
+{
+    if (value < center)
+    {
+        int16_t range = center - min + 1;
+        int16_t distance = center - value;
+        float percent = (float)distance/(float)range;
+        if (percent < 0.005) percent = 0;
+        if (percent > 1.0) percent = 1;
+        return -percent;
+    }
+    else
+    {
+        int16_t range = max - center + 1;
+        int16_t distance = value - center;
+        float percent = (float)distance/(float)range;
+        if (percent < 0.005) percent = 0;
+        if (percent > 1.0) percent = 1;
+        return +percent;
+    }
+}
+
+report_mouse_t pointing_device_driver_get_report(report_mouse_t mouse_report)
+{
+    static uint16_t timer = 0;
+    report_mouse_t report = {0};
+    if (timer_elapsed(timer) > 10)
+    {
+        timer = timer_read();
+
+        joystickX = analogReadPin(ANALOG_JOYSTICK_X_AXIS_PIN);
+        joystickY = analogReadPin(ANALOG_JOYSTICK_Y_AXIS_PIN);
+
+        report.x = 50 * joystick_percent(joystickX, X_MIN, X_ORIGIN, X_MAX);
+        report.y = 50 * joystick_percent(joystickY, Y_MIN, Y_ORIGIN, Y_MAX);
+    }
+    return report;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record)
