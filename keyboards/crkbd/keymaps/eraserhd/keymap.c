@@ -11,10 +11,6 @@ extern rgblight_config_t rgblight_config;
 int RGB_current_mode;
 #endif
 
-#ifdef OLED_ENABLE
-static uint32_t oled_timer = 0;
-#endif
-
 enum layers
 {
     _Qwerty,
@@ -125,13 +121,6 @@ void advance_line(void)
 
 bool oled_task_user(void)
 {
-    /*
-    if (timer_elapsed32(oled_timer) > 10000)
-    {
-        oled_off();
-        return false;
-    }
-    */
     if (is_keyboard_master())
     {
         if (in_prompt())
@@ -182,11 +171,6 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report)
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record)
 {
-#ifdef OLED_ENABLE
-    if (record->event.pressed)
-        oled_timer = timer_read32();
-#endif
-
     if (record->event.pressed)
         set_keylog(keycode, record);
 
