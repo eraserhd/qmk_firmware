@@ -129,11 +129,11 @@ bool oled_task_user(void)
         {
             switch (get_highest_layer(layer_state))
             {
-            case _Qwerty:  oled_write_ln_P(PSTR("   A "), false); break;
-            case _Symbol:  oled_write_ln_P(PSTR("   ) "), false); break;
-            case _Mouse:   oled_write_ln_P(PSTR("   M "), false); break;
-            case _Number:  oled_write_ln_P(PSTR("   1 "), false); break;
-            default:       oled_write_ln_P(PSTR("   ? "), false); break;
+            case _Qwerty:  oled_write_ln_P(PSTR("   A"), false); break;
+            case _Symbol:  oled_write_ln_P(PSTR("   )"), false); break;
+            case _Mouse:   oled_write_ln_P(PSTR("   M"), false); break;
+            case _Number:  oled_write_ln_P(PSTR("   1"), false); break;
+            default:       oled_write_ln_P(PSTR("   ?"), false); break;
             }
         }
 
