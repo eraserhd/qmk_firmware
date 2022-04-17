@@ -5,15 +5,13 @@
 #include "version.h"
 #include "prompt.h"
 
-extern uint8_t is_master;
-
 #ifdef RGBLIGHT_ENABLE
 //Following line allows macro to read current RGB settings
 extern rgblight_config_t rgblight_config;
 int RGB_current_mode;
 #endif
 
-#ifdef OLED_DRIVER_ENABLE
+#ifdef OLED_ENABLE
 static uint32_t oled_timer = 0;
 #endif
 
@@ -109,11 +107,11 @@ void set_keylog(uint16_t keycode, keyrecord_t *record)
     snprintf(row_and_column, sizeof(row_and_column), "%2dx%d", record->event.key.row, record->event.key.col);
 }
 
-#ifdef OLED_DRIVER_ENABLE
+#ifdef OLED_ENABLE
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation)
 {
-    if (is_master)
+    if (is_keyboard_master())
         return OLED_ROTATION_270;
     return rotation;
 }
@@ -125,20 +123,22 @@ void advance_line(void)
     oled_write_ln_P(PSTR("     "), false);
 }
 
-void oled_task_user(void)
+bool oled_task_user(void)
 {
+    /*
     if (timer_elapsed32(oled_timer) > 10000)
     {
         oled_off();
-        return;
+        return false;
     }
-    if (is_master)
+    */
+    if (is_keyboard_master())
     {
         if (in_prompt())
             write_prompt_to_oled();
         else
         {
-            switch (biton32(layer_state))
+            switch (get_highest_layer(layer_state))
             {
             case _Qwerty:  oled_write_ln_P(PSTR("   A "), false); break;
             case _Symbol:  oled_write_ln_P(PSTR("   ) "), false); break;
@@ -162,6 +162,7 @@ void oled_task_user(void)
     {
         oled_write(read_logo(), false);
     }
+    return false;
 }
 #endif
 
@@ -181,7 +182,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report)
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record)
 {
-#ifdef OLED_DRIVER_ENABLE
+#ifdef OLED_ENABLE
     if (record->event.pressed)
         oled_timer = timer_read32();
 #endif

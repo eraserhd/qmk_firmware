@@ -56,3 +56,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ANALOG_JOYSTICK_READ_INTERVAL 20
 #define POINTING_DEVICE_INVERT_Y
 #define POINTING_DEVICE_RIGHT
+
+// Add some real numbers
+#define ANALOG_JOYSTICK_AXIS_MAX (1023-128)

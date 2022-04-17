@@ -117,7 +117,7 @@ static const char mapping[] PROGMEM =
     '}', '|', '#', ':', '"', '~', '<', '>', '?',   0,   0,   0,   0,   0,   0,   0, // 0x30
 };
 
-#ifdef OLED_DRIVER_ENABLE
+#ifdef OLED_ENABLE
 void write_prompt_to_oled(void)
 {
     uint8_t width = oled_max_chars();

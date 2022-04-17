@@ -3,17 +3,10 @@ POINTING_DEVICE_DRIVER = analog_joystick
 UNICODE_ENABLE = yes
 BOOTMAGIC_ENABLE = no
 EXTRAKEY_ENABLE = yes
-OLED_DRIVER_ENABLE = yes
+OLED_ENABLE = yes
+OLED_DRIVER = SSD1306
 RGBLIGHT_ENABLE = no
+LTO_ENABLE = yes
 
-EXTRAFLAGS += -flto
 
-# If you want to change the display of OLED, you need to change here
-SRC +=  ./lib/glcdfont.c \
-        ./lib/rgb_state_reader.c \
-        ./lib/logo_reader.c \
-        #./lib/layer_state_reader.c \
-        # ./lib/keylogger.c \
-        # ./lib/mode_icon_reader.c \
-        # ./lib/host_led_state_reader.c \
-        # ./lib/timelogger.c \
+SRC += ./lib/logo_reader.c

@@ -5,7 +5,7 @@ void enter_prompt(void);
 void leave_prompt(void);
 bool in_prompt(void);
 
-#ifdef OLED_DRIVER_ENABLE
+#ifdef OLED_ENABLE
 void write_prompt_to_oled(void);
 #endif
 
