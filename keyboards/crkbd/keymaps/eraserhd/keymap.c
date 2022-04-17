@@ -28,7 +28,8 @@ enum layers
 enum custom_keycodes
 {
     _Prompt_ = SAFE_RANGE, // can always be here
-    _LMenu_
+    _LMenu_,
+    _MDrag_
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
@@ -72,13 +73,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
     ),
     [_Mouse] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      _______, _______, _______, _______, _______, _______,                     _______ , XXXXXXX, XXXXXXX, _______, KC_VOLU, _______,
+      _______, _______, _______, KC_BTN1, KC_BTN2, _______,                     _______ , XXXXXXX, XXXXXXX, _______, KC_VOLU, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, _______, _______, _______, _______, _______,                     KC_MS_L , KC_MS_D, KC_MS_U, KC_MS_R, _______, KC_MPLY,
+      _______, _______, _______, _______, _______, _______,                     _______ , KC_BTN1, KC_BTN3, KC_BTN2, _______, KC_MPLY,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, _______, _______, _______, _______, _______,                     KC_WH_L , KC_WH_D, KC_WH_U, KC_WH_R, KC_VOLD, _______,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          _______, _______, KC_BTN1,    KC_BTN2, _______, KC_BTN3
+                                          _______, _MDrag_, KC_BTN1,    KC_BTN2, _______, KC_BTN3
                                       //`--------------------------'  `--------------------------'
     ),
     [_Number] = LAYOUT(
@@ -164,6 +165,20 @@ void oled_task_user(void)
 }
 #endif
 
+static _Bool set_scrolling = false;
+
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report)
+{
+    if (set_scrolling)
+    {
+        mouse_report.h = -mouse_report.x/16;
+        mouse_report.v = -mouse_report.y/16;
+        mouse_report.x = 0;
+        mouse_report.y = 0;
+    }
+    return mouse_report;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record)
 {
 #ifdef OLED_DRIVER_ENABLE
@@ -191,6 +206,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
     case _Prompt_:
         enter_prompt();
         return false;
+    case _MDrag_:
+        set_scrolling = record->event.pressed;
+        return true;
     default:
         return true;
     }
