@@ -175,18 +175,6 @@ bool oled_task_user(void)
 
 static _Bool set_scrolling = false;
 
-report_mouse_t pointing_device_task_user(report_mouse_t mouse_report)
-{
-    if (set_scrolling)
-    {
-        mouse_report.h = -mouse_report.x/16;
-        mouse_report.v = -mouse_report.y/16;
-        mouse_report.x = 0;
-        mouse_report.y = 0;
-    }
-    return mouse_report;
-}
-
 float joystick_percent(int16_t value, int16_t min, int16_t center, int16_t max)
 {
     if (value < center)
@@ -213,13 +201,20 @@ report_mouse_t pointing_device_driver_get_report(report_mouse_t mouse_report)
 {
     static uint16_t timer = 0;
     report_mouse_t report = {0};
-    if (timer_elapsed(timer) > 10)
+    if (timer_elapsed(timer) <= (set_scrolling ? 50 : 10))
+        return report;
+    timer = timer_read();
+
+    joystickX = analogReadPin(ANALOG_JOYSTICK_X_AXIS_PIN);
+    joystickY = analogReadPin(ANALOG_JOYSTICK_Y_AXIS_PIN);
+
+    if (set_scrolling)
     {
-        timer = timer_read();
-
-        joystickX = analogReadPin(ANALOG_JOYSTICK_X_AXIS_PIN);
-        joystickY = analogReadPin(ANALOG_JOYSTICK_Y_AXIS_PIN);
-
+        report.h = -20 * joystick_percent(joystickX, X_MIN, X_ORIGIN, X_MAX);
+        report.v = -20 * joystick_percent(joystickY, Y_MIN, Y_ORIGIN, Y_MAX);
+    }
+    else
+    {
         report.x = 50 * joystick_percent(joystickX, X_MIN, X_ORIGIN, X_MAX);
         report.y = 50 * joystick_percent(joystickY, Y_MIN, Y_ORIGIN, Y_MAX);
     }
