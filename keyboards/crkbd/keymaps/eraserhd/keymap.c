@@ -211,7 +211,7 @@ report_mouse_t pointing_device_driver_get_report(report_mouse_t mouse_report)
     if (set_scrolling)
     {
         report.h = -20 * joystick_percent(joystickX, X_MIN, X_ORIGIN, X_MAX);
-        report.v = -20 * joystick_percent(joystickY, Y_MIN, Y_ORIGIN, Y_MAX);
+        report.v = 20 * joystick_percent(joystickY, Y_MIN, Y_ORIGIN, Y_MAX);
     }
     else
     {
