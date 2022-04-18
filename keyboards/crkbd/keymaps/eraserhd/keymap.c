@@ -215,8 +215,8 @@ report_mouse_t pointing_device_driver_get_report(report_mouse_t mouse_report)
     }
     else
     {
-        report.x = 50 * joystick_percent(joystickX, X_MIN, X_ORIGIN, X_MAX);
-        report.y = 50 * joystick_percent(joystickY, Y_MIN, Y_ORIGIN, Y_MAX);
+        report.x = 35 * joystick_percent(joystickX, X_MIN, X_ORIGIN, X_MAX);
+        report.y = 35 * joystick_percent(joystickY, Y_MIN, Y_ORIGIN, Y_MAX);
     }
     return report;
 }
