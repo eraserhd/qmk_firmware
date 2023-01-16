@@ -32,7 +32,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
 
 #define _CAP_Symb_  LT(_Symbol,KC_CAPSLOCK)
 #define _D_Num_     LT(_Number,KC_D)
-#define _F__Symbol_ LT(_Symbol,KC_F)
 #define _Z_LCtl_    LCTL_T(KC_Z)
 #define _X_LAlt_    LALT_T(KC_X)
 #define _Tab_Cmd    LGUI_T(KC_TAB)
@@ -90,11 +89,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
     ),
 };
 
+int16_t xOrigin;
+int16_t yOrigin;
+
 void matrix_init_user(void)
 {
 #ifdef RGBLIGHT_ENABLE
     RGB_current_mode = rgblight_config.mode;
 #endif
+    xOrigin = analogReadPin(ANALOG_JOYSTICK_X_AXIS_PIN);
+    yOrigin = analogReadPin(ANALOG_JOYSTICK_Y_AXIS_PIN);
 }
 
 char row_and_column[8] = "  x  ";
@@ -120,12 +124,10 @@ void advance_line(void)
     oled_write_ln_P(PSTR("     "), false);
 }
 
-#define X_MIN    70
-#define X_ORIGIN 498
+#define X_MIN    75
 #define X_MAX    793
 
 #define Y_MIN    135
-#define Y_ORIGIN 514
 #define Y_MAX    855
 
 int16_t joystickX;
@@ -182,7 +184,7 @@ float joystick_percent(int16_t value, int16_t min, int16_t center, int16_t max)
         int16_t range = center - min + 1;
         int16_t distance = center - value;
         float percent = (float)distance/(float)range;
-        if (percent < 0.005) percent = 0;
+        if (percent < 0.02) percent = 0;
         if (percent > 1.0) percent = 1;
         return -percent;
     }
@@ -191,7 +193,7 @@ float joystick_percent(int16_t value, int16_t min, int16_t center, int16_t max)
         int16_t range = max - center + 1;
         int16_t distance = value - center;
         float percent = (float)distance/(float)range;
-        if (percent < 0.005) percent = 0;
+        if (percent < 0.02) percent = 0;
         if (percent > 1.0) percent = 1;
         return +percent;
     }
@@ -210,13 +212,13 @@ report_mouse_t pointing_device_driver_get_report(report_mouse_t mouse_report)
 
     if (set_scrolling)
     {
-        report.h = -20 * joystick_percent(joystickX, X_MIN, X_ORIGIN, X_MAX);
-        report.v = 20 * joystick_percent(joystickY, Y_MIN, Y_ORIGIN, Y_MAX);
+        report.h = -20 * joystick_percent(joystickX, X_MIN, xOrigin, X_MAX);
+        report.v = 20 * joystick_percent(joystickY, Y_MIN, yOrigin, Y_MAX);
     }
     else
     {
-        report.x = 35 * joystick_percent(joystickX, X_MIN, X_ORIGIN, X_MAX);
-        report.y = 35 * joystick_percent(joystickY, Y_MIN, Y_ORIGIN, Y_MAX);
+        report.x = 35 * joystick_percent(joystickX, X_MIN, xOrigin, X_MAX);
+        report.y = 35 * joystick_percent(joystickY, Y_MIN, yOrigin, Y_MAX);
     }
     return report;
 }
