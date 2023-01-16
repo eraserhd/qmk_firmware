@@ -53,4 +53,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ANALOG_JOYSTICK_X_AXIS_PIN B4
 #define ANALOG_JOYSTICK_Y_AXIS_PIN B5
 #define POINTING_DEVICE_INVERT_Y
+#define SPLIT_POINTING_ENABLE
 #define POINTING_DEVICE_RIGHT

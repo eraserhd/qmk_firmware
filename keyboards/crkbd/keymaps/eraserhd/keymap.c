@@ -30,7 +30,7 @@ enum custom_keycodes
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
 {
 
-#define _CAP_Symb_  LT(_Symbol,KC_CAPSLOCK)
+#define _CAP_Symb_  LT(_Symbol,KC_CAPS_LOCK)
 #define _D_Num_     LT(_Number,KC_D)
 #define _Z_LCtl_    LCTL_T(KC_Z)
 #define _X_LAlt_    LALT_T(KC_X)
@@ -231,7 +231,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
     switch (keycode)
     {
     /* Defeat Mac OS's defeat of caps lock. */
-    case KC_CAPSLOCK:
+    case KC_CAPS_LOCK:
         if (!record->event.pressed)
             _delay_ms(50);
         return true;

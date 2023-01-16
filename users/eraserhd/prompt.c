@@ -3,6 +3,8 @@
 #include "prompt.h"
 #include "report.h"
 
+#define NO_VALUE 0xFF
+
 static host_driver_t* original_driver = NULL;
 static report_keyboard_t last_report = {};
 static char prompt[40] = ">";
@@ -30,14 +32,14 @@ static uint16_t look_up_symbol(const char* name)
 
     if (!strcmp_P(name, PSTR("left")))  return MAGIC_EE_HANDS_LEFT;
     if (!strcmp_P(name, PSTR("right"))) return MAGIC_EE_HANDS_RIGHT;
-    if (!strcmp_P(name, PSTR("sleep"))) return LSFT(LCTL(KC_POWER));
-    return KC_UNDEFINED;
+    if (!strcmp_P(name, PSTR("sleep"))) return KC_SYSTEM_SLEEP;
+    return NO_VALUE;
 }
 
 static void run_command(void)
 {
     uint16_t value = look_up_symbol(prompt+1);
-    if (value != KC_UNDEFINED)
+    if (value != NO_VALUE)
         tap_code16(value);
 #ifdef RGBLIGHT_ENABLE
     else if (!strcmp_P(prompt+1, PSTR("led off")))
@@ -90,15 +92,15 @@ static void run_command(void)
 #endif
 #ifdef UNICODE_ENABLE
     else if (!strcmp_P(prompt+1, PSTR("unicode mac")))
-        tap_code16(UNICODE_MODE_MAC);
+        tap_code16(UNICODE_MODE_MACOS);
     else if (!strcmp_P(prompt+1, PSTR("unicode linux")))
-        tap_code16(UNICODE_MODE_LNX);
+        tap_code16(UNICODE_MODE_LINUX);
     else if (!strcmp_P(prompt+1, PSTR("unicode bsd")))
         tap_code16(UNICODE_MODE_BSD);
     else if (!strcmp_P(prompt+1, PSTR("unicode windows")))
-        tap_code16(UNICODE_MODE_WIN);
+        tap_code16(UNICODE_MODE_WINDOWS);
     else if (!strcmp_P(prompt+1, PSTR("unicode wincompose")))
-        tap_code16(UNICODE_MODE_WINC);
+        tap_code16(UNICODE_MODE_WINCOMPOSE);
 #endif
 }
 
@@ -157,8 +159,8 @@ static void send_keyboard(report_keyboard_t *report)
             continue;
         switch (report->keys[i])
         {
-        case KC_LSHIFT:
-        case KC_RSHIFT:
+        case KC_LEFT_SHIFT:
+        case KC_RIGHT_SHIFT:
             continue;
         default:
             break;
@@ -204,11 +206,7 @@ static void send_mouse(report_mouse_t *mouse)
 {
 }
 
-static void send_system(uint16_t code)
-{
-}
-
-static void send_consumer(uint16_t code)
+static void send_extra(report_extra_t *report)
 {
 }
 
@@ -217,8 +215,7 @@ static host_driver_t prompt_driver =
     .keyboard_leds = keyboard_leds,
     .send_keyboard = send_keyboard,
     .send_mouse    = send_mouse,
-    .send_system   = send_system,
-    .send_consumer = send_consumer,
+    .send_extra    = send_extra,
 };
 
 
