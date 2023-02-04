@@ -3,7 +3,7 @@
     "keyboard_name": "ehdactyl",
     "maintainer": "eraserhd",
     "bootloader": "rp2040",
-    "diode_direction": "COL2ROW",
+    "diode_direction": "ROW2COL",
     "build": {
         "lto": true
     },
