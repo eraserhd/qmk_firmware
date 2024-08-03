@@ -28,18 +28,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define Bspc_Cmd    LGUI_T(KC_BSPC)
 #define _Q_Mouse_   LT(_Mouse,KC_Q)
 #define _RMenu_     LCTL(KC_F8)
+#define _Num_       MO(_Number)
 
     [_Qwerty] = LAYOUT(
   //╭────────┬────────┬────────┬────────┬────────┬────────╮                    ╭────────┬────────┬────────┬────────┬────────┬────────╮
       KC_MINS,_Q_Mouse_, KC_W  ,  KC_E  ,  KC_R  ,  KC_T  ,                        KC_Y ,  KC_U  ,  KC_I  ,  KC_O  ,  KC_P  , KC_BSLS,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                    ├────────┼────────┼────────┼────────┼────────┼────────┤
-   _CAP_Symb_,  KC_A  ,  KC_S  ,_D_Num_ ,  KC_F  ,  KC_G  ,                        KC_H ,  KC_J  ,  KC_K  ,  KC_L  ,KC_SCLN,_Qu_Symb_,
+   _CAP_Symb_,  KC_A  ,  KC_S  ,  KC_D  ,  KC_F  ,  KC_G  ,                        KC_H ,  KC_J  ,  KC_K  ,  KC_L  ,KC_SCLN,_Qu_Symb_,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                    ├────────┼────────┼────────┼────────┼────────┼────────┤
       KC_LSFT,_Z_LCtl_,_X_LAlt_,  KC_C  ,  KC_V  ,  KC_B  ,                        KC_N ,  KC_M  , KC_COMM,Dot_RAlt,Slsh_Ctl, KC_RSFT,
   //╰────────┴────────┴────────+────────┼────────┼────────┼────────╮  ╭────────┼────────┼────────┼────────┼────────┴────────┴────────╯
-                                 KC_ESC , KC_ENT ,_Tab_Cmd,  KC_F9 ,   _______ , _______,Bspc_Cmd, KC_SPC ,
+                                 KC_ESC , KC_ENT ,_Tab_Cmd,  KC_F9 ,    KC_ESC ,_______ ,Bspc_Cmd, KC_SPC ,
                              //╰────────┴────────┼────────┼────────┤  ╰────────┴────────┴────────┴────────╯
-                                                   KC_F15 , KC_F16
+                                                    _Num_ , KC_F16
                                                //╰────────┴────────╯
     ),
 
